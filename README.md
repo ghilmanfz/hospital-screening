@@ -1,6 +1,8 @@
-# Portal Rumah Sakit & Sistem Screening Mandiri
+# SISMED — Sistem Informasi & Diagnosa Medis Terpadu
 
-Aplikasi web portal rumah sakit modern yang dirancang dengan estetika premium menggunakan tema warna **Mayapada Hospital / Deloitte** (Deep Navy `#0b2545` dan Emerald Green `#008751`). Aplikasi ini memfasilitasi pasien untuk mengisi keluhan kesehatan, melakukan screening mandiri dengan rekomendasi rujukan cerdas (IGD, Poli Umum, Poli Anak), dan memberikan survei penilaian kepuasan layanan serta pelaporan lengkap untuk admin.
+Aplikasi web rumah sakit modern yang dirancang dengan estetika premium menggunakan tema warna **Rumah Sakit Bhayangkara LEMDIKLAT** (Deep Navy `#0b2545` dan Emerald Green `#008751`). SISMED memfasilitasi pasien memilih layanan (Merasa Kurang Sehat / Kontrol), mengisi kuisioner diagnosa & screening mandiri dengan rekomendasi rujukan cerdas (IGD, Poli Umum, Poli Anak), survei kepuasan layanan & kebersihan, verifikasi diagnosa oleh **Dokter IGD** setelah pemeriksaan fisik, serta pelaporan lengkap untuk admin.
+
+**Tiga aktor sistem:** Pasien, Dokter IGD (1 akun bersama, dibuatkan Admin), dan Admin.
 
 ---
 

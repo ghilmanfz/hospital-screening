@@ -25,8 +25,16 @@
                         <span>Ringkasan Statistik</span>
                     </a>
 
+                    <!-- Data Pasien -->
+                    <a href="{{ route('admin.patients') }}"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
+                        {{ Route::currentRouteName() == 'admin.patients' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-650 hover:bg-slate-50 hover:text-navy-900' }}">
+                        <i class="fa-solid fa-users text-sm"></i>
+                        <span>Data Pasien</span>
+                    </a>
+
                     <!-- Landing Page Manager -->
-                    <a href="{{ route('admin.landing') }}" 
+                    <a href="{{ route('admin.landing') }}"
                         class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
                         {{ Route::currentRouteName() == 'admin.landing' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-650 hover:bg-slate-50 hover:text-navy-900' }}">
                         <i class="fa-regular fa-window-restore text-sm"></i>
@@ -51,8 +59,16 @@
 
 
 
+                    <!-- Kelola Akun -->
+                    <a href="{{ route('admin.accounts') }}"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
+                        {{ Route::currentRouteName() == 'admin.accounts' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-650 hover:bg-slate-50 hover:text-navy-900' }}">
+                        <i class="fa-solid fa-user-gear text-sm"></i>
+                        <span>Kelola Akun</span>
+                    </a>
+
                     <!-- Configurations -->
-                    <a href="{{ route('admin.settings') }}" 
+                    <a href="{{ route('admin.settings') }}"
                         class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
                         {{ Route::currentRouteName() == 'admin.settings' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-650 hover:bg-slate-50 hover:text-navy-900' }}">
                         <i class="fa-solid fa-gears text-sm"></i>

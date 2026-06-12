@@ -81,6 +81,7 @@
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Nama Pasien</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Gejala Singkat</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Hasil Screening</th>
+                    <th class="py-4 font-bold text-xs uppercase tracking-wider">Verifikasi Dokter</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Status Survei</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider text-right">Aksi</th>
                 </tr>
@@ -98,6 +99,19 @@
                             <span class="inline-flex items-center bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded border border-emerald-100/50">
                                 {{ $diag->screening_result }}
                             </span>
+                        @endif
+                    </td>
+                    <td class="py-4 whitespace-nowrap">
+                        @if($diag->verification_status == 'Terverifikasi')
+                            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded">
+                                <i class="fa-solid fa-stamp mr-1"></i>Terverifikasi
+                            </span>
+                        @elseif($diag->verification_status == 'Menunggu Verifikasi')
+                            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-1 rounded">
+                                <i class="fa-regular fa-clock mr-1"></i>Menunggu
+                            </span>
+                        @else
+                            <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">-</span>
                         @endif
                     </td>
                     <td class="py-4 whitespace-nowrap">
@@ -148,6 +162,19 @@
                                     <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">No. WhatsApp</span>
                                     <p class="font-semibold text-slate-600">+{{ $diag->user->phone_number }}</p>
                                 </div>
+                                <div>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Jenis Kelamin / Usia</span>
+                                    <p class="font-semibold text-slate-600 text-xs">{{ $diag->user->gender ?? '-' }}{{ $diag->user->age() !== null ? ', ' . $diag->user->age() . ' th' : '' }}</p>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Tanggal Lahir</span>
+                                    <p class="font-semibold text-slate-600 text-xs">{{ $diag->user->birth_date ? $diag->user->birth_date->format('d-m-Y') : '-' }}</p>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-slate-50 pt-3">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Alamat Rumah</span>
+                                <p class="font-semibold text-slate-600 text-xs leading-relaxed">{{ $diag->user->address ?? 'Belum diisi' }}</p>
                             </div>
 
                             <div class="border-t border-slate-50 pt-3">
@@ -167,6 +194,29 @@
                                     @endif
                                 </div>
                             </div>
+
+                            @if(!empty($diag->screening_result))
+                            <div class="border-t border-slate-50 pt-3">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1.5">Verifikasi Dokter IGD</span>
+                                @if($diag->verification_status == 'Terverifikasi')
+                                <div class="bg-emerald-50 border border-emerald-100 p-3 rounded-xl space-y-1.5">
+                                    <p class="text-xs font-bold text-emerald-800">
+                                        <i class="fa-solid fa-stamp mr-1"></i>{{ $diag->verified_penyakit }}
+                                    </p>
+                                    @if($diag->catatan_dokter)
+                                    <p class="text-[11px] text-emerald-700/90 leading-relaxed">{{ $diag->catatan_dokter }}</p>
+                                    @endif
+                                    <p class="text-[10px] text-emerald-600 font-semibold">Diverifikasi {{ $diag->verified_at ? $diag->verified_at->format('d-m-Y H:i') : '' }}</p>
+                                </div>
+                                @else
+                                <div class="bg-amber-50 border border-amber-100 p-3 rounded-xl">
+                                    <p class="text-[11px] font-semibold text-amber-800 leading-relaxed">
+                                        <i class="fa-regular fa-clock mr-1"></i>Menunggu verifikasi Dokter IGD setelah pemeriksaan fisik.
+                                    </p>
+                                </div>
+                                @endif
+                            </div>
+                            @endif
 
                             @if(!empty($diag->screening_answers))
                             @php
@@ -225,7 +275,7 @@
 
                 @empty
                 <tr>
-                    <td colspan="6" class="py-8 text-center text-slate-400">
+                    <td colspan="7" class="py-8 text-center text-slate-400">
                         Tidak ada data diagnosa pasien yang ditemukan.
                     </td>
                 </tr>

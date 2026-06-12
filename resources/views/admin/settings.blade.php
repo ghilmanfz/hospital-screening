@@ -140,7 +140,7 @@
         </div>
 
         <div class="text-right">
-            <button type="submit" class="text-sm font-bold text-white bg-gradient-mayapada px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
+            <button type="submit" class="text-sm font-bold text-white bg-gradient-bhayangkara px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
                 <i class="fa-solid fa-floppy-disk text-xs"></i>
                 <span>Simpan Konfigurasi Sistem</span>
             </button>
@@ -172,7 +172,7 @@
         <div>
             <label for="message" class="block text-xs font-bold text-navy-900 uppercase tracking-wider mb-2">Isi Pesan Test</label>
             <textarea name="message" id="message" rows="3" required placeholder="Tuliskan pesan percobaan di sini..."
-                class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all text-sm outline-none text-slate-800 font-medium">Testing koneksi WhatsApp Gateway Fonnte - Portal Rumah Sakit Mayapada.</textarea>
+                class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all text-sm outline-none text-slate-800 font-medium">Testing koneksi WhatsApp Gateway Fonnte - Portal Rumah Sakit Bhayangkara LEMDIKLAT.</textarea>
         </div>
 
         <div class="pt-2">

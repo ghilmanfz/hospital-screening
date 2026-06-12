@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Diagnosis;
+use App\Models\LoginAttempt;
 use App\Models\SystemConfiguration;
 use App\Models\WhatsappMessageLog;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -24,7 +27,7 @@ class AdminController extends Controller
         return null;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if ($redirect = $this->checkAuth()) {
             return $redirect;
@@ -36,11 +39,82 @@ class AdminController extends Controller
         $completedSurveysCount = Diagnosis::where('status_survei', 'Survei Selesai')->count();
         $totalProfit = Diagnosis::sum('profit_amount');
 
-        // Averages for Satisfaction Chart
-        $avgFacilities = Diagnosis::whereNotNull('survey_facilities')->avg('survey_facilities') ?? 0;
-        $avgCleanliness = Diagnosis::whereNotNull('survey_cleanliness')->avg('survey_cleanliness') ?? 0;
-        $avgDoctor = Diagnosis::whereNotNull('survey_doctor')->avg('survey_doctor') ?? 0;
-        $avgPharmacy = Diagnosis::whereNotNull('survey_pharmacy')->avg('survey_pharmacy') ?? 0;
+        // ===== Indeks Kepuasan dari waktu ke waktu (filter rentang & granularitas) =====
+        $granularity = in_array($request->input('granularity'), ['harian', 'bulanan']) ? $request->input('granularity') : 'bulanan';
+
+        $endDate = $request->filled('end_date') ? Carbon::parse($request->end_date) : Carbon::today();
+        if ($request->filled('start_date')) {
+            $startDate = Carbon::parse($request->start_date);
+        } else {
+            // Default: 30 hari terakhir (harian) atau 6 bulan terakhir (bulanan)
+            $startDate = $granularity === 'harian'
+                ? Carbon::today()->subDays(29)
+                : Carbon::today()->startOfMonth()->subMonthsNoOverflow(5);
+        }
+        if ($startDate->greaterThan($endDate)) {
+            [$startDate, $endDate] = [$endDate->copy(), $startDate->copy()];
+        }
+
+        $rangeStart = $startDate->copy()->startOfDay();
+        $rangeEnd = $endDate->copy()->endOfDay();
+
+        $periodExpr = $granularity === 'harian'
+            ? "DATE(created_at)"
+            : "DATE_FORMAT(created_at, '%Y-%m')";
+
+        $trendRows = Diagnosis::whereNotNull('survey_facilities')
+            ->whereBetween('created_at', [$rangeStart, $rangeEnd])
+            ->selectRaw("$periodExpr as period")
+            ->selectRaw('AVG(survey_facilities) as avg_f')
+            ->selectRaw('AVG(survey_cleanliness) as avg_c')
+            ->selectRaw('AVG(survey_doctor) as avg_d')
+            ->selectRaw('AVG(survey_pharmacy) as avg_p')
+            ->selectRaw('COUNT(*) as total')
+            ->groupByRaw($periodExpr)
+            ->orderByRaw("$periodExpr ASC")
+            ->get();
+
+        $trendLabels = [];
+        $trendFacilities = [];
+        $trendCleanliness = [];
+        $trendDoctor = [];
+        $trendPharmacy = [];
+        $trendOverall = [];
+
+        foreach ($trendRows as $row) {
+            $trendLabels[] = $granularity === 'harian'
+                ? Carbon::parse($row->period)->format('d M y')
+                : Carbon::parse($row->period . '-01')->format('M Y');
+            $f = round((float) $row->avg_f, 2);
+            $c = round((float) $row->avg_c, 2);
+            $d = round((float) $row->avg_d, 2);
+            $p = round((float) $row->avg_p, 2);
+            $trendFacilities[] = $f;
+            $trendCleanliness[] = $c;
+            $trendDoctor[] = $d;
+            $trendPharmacy[] = $p;
+            $trendOverall[] = round(($f + $c + $d + $p) / 4, 2);
+        }
+
+        // Rata-rata ringkas dalam rentang terpilih (untuk kartu di samping grafik)
+        $rangeAgg = Diagnosis::whereNotNull('survey_facilities')
+            ->whereBetween('created_at', [$rangeStart, $rangeEnd])
+            ->selectRaw('AVG(survey_facilities) as f, AVG(survey_cleanliness) as c, AVG(survey_doctor) as d, AVG(survey_pharmacy) as p, COUNT(*) as total')
+            ->first();
+
+        $avgFacilities = $rangeAgg->f ?? 0;
+        $avgCleanliness = $rangeAgg->c ?? 0;
+        $avgDoctor = $rangeAgg->d ?? 0;
+        $avgPharmacy = $rangeAgg->p ?? 0;
+        $rangeSurveyCount = (int) ($rangeAgg->total ?? 0);
+
+        $filterStart = $startDate->format('Y-m-d');
+        $filterEnd = $endDate->format('Y-m-d');
+
+        // Warning login gagal 7 hari terakhir
+        $failedLoginCount = LoginAttempt::where('status', 'Gagal')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->count();
 
         return view('admin.dashboard', compact(
             'totalPatients',
@@ -50,8 +124,230 @@ class AdminController extends Controller
             'avgFacilities',
             'avgCleanliness',
             'avgDoctor',
-            'avgPharmacy'
+            'avgPharmacy',
+            'failedLoginCount',
+            'granularity',
+            'filterStart',
+            'filterEnd',
+            'rangeSurveyCount',
+            'trendLabels',
+            'trendFacilities',
+            'trendCleanliness',
+            'trendDoctor',
+            'trendPharmacy',
+            'trendOverall'
         ));
+    }
+
+    /**
+     * Data Pasien lengkap (gender, tanggal lahir, alamat) + monitoring login gagal
+     */
+    public function patientIndex(Request $request)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $query = User::where('role', 'pasien')->withCount('diagnoses');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('phone_number', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $patients = $query->orderBy('name')->get();
+
+        // Log percobaan login gagal (warning salah username/password)
+        $loginAttempts = LoginAttempt::with('user')
+            ->where('status', 'Gagal')
+            ->orderBy('created_at', 'desc')
+            ->take(30)
+            ->get();
+
+        return view('admin.patients', compact('patients', 'loginAttempts'));
+    }
+
+    /**
+     * Kelola Akun: manajemen seluruh akun (Admin, Dokter IGD, Pasien)
+     */
+    public function accountIndex(Request $request)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $query = User::query();
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('phone_number', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $accounts = $query->orderByRaw("FIELD(role, 'admin', 'dokter', 'pasien')")->orderBy('name')->get();
+
+        $counts = [
+            'admin' => User::where('role', 'admin')->count(),
+            'dokter' => User::where('role', 'dokter')->count(),
+            'pasien' => User::where('role', 'pasien')->count(),
+        ];
+
+        return view('admin.accounts', compact('accounts', 'counts'));
+    }
+
+    /**
+     * Normalize nomor telepon: ganti 0 di depan dengan kode negara default
+     */
+    private function normalizePhone(string $phone): string
+    {
+        if (str_starts_with($phone, '0')) {
+            $countryCode = SystemConfiguration::getVal('default_country_code', '62');
+            return $countryCode . substr($phone, 1);
+        }
+        return $phone;
+    }
+
+    public function accountStore(Request $request)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|in:admin,dokter,pasien',
+            'phone_number' => 'required|string|unique:users,phone_number',
+            'email' => 'nullable|email|unique:users,email',
+            'password' => 'required|min:6',
+            'status' => 'required|in:active,blocked',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone_number' => $this->normalizePhone($request->phone_number),
+            'role' => $request->role,
+            'status' => $request->status,
+            'password' => Hash::make($request->password),
+            // Akun dibuat oleh admin → langsung aktif tanpa perlu verifikasi OTP
+            'phone_verified_at' => now(),
+        ]);
+
+        AuditLog::create([
+            'admin_id' => Auth::id(),
+            'activity' => 'Membuat akun baru: ' . $user->name . ' (' . $user->role . ')',
+            'module' => 'Kelola Akun',
+            'old_value' => null,
+            'new_value' => $user->email ?? $user->phone_number,
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', 'Akun "' . $user->name . '" (' . ucfirst($user->role) . ') berhasil dibuat.');
+    }
+
+    public function accountUpdate(Request $request, $id)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|in:admin,dokter,pasien',
+            'phone_number' => 'required|string|unique:users,phone_number,' . $user->id,
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'status' => 'required|in:active,blocked,pending_verification',
+        ]);
+
+        // Cegah admin menurunkan role / menonaktifkan akunnya sendiri (agar tidak terkunci dari sistem)
+        if ($user->id === Auth::id() && ($request->role !== 'admin' || $request->status !== 'active')) {
+            return back()->withErrors(['account' => 'Anda tidak dapat mengubah role atau menonaktifkan akun Anda sendiri.']);
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone_number' => $this->normalizePhone($request->phone_number),
+            'role' => $request->role,
+            'status' => $request->status,
+        ]);
+
+        AuditLog::create([
+            'admin_id' => Auth::id(),
+            'activity' => 'Memperbarui akun: ' . $user->name . ' (' . $user->role . ', ' . $user->status . ')',
+            'module' => 'Kelola Akun',
+            'old_value' => 'Update akun #' . $user->id,
+            'new_value' => $user->role . ' / ' . $user->status,
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', 'Akun "' . $user->name . '" berhasil diperbarui.');
+    }
+
+    public function accountResetPassword(Request $request, $id)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $request->validate([
+            'password' => 'required|min:6',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update(['password' => Hash::make($request->password)]);
+
+        AuditLog::create([
+            'admin_id' => Auth::id(),
+            'activity' => 'Reset password akun: ' . $user->name,
+            'module' => 'Kelola Akun',
+            'old_value' => null,
+            'new_value' => 'Password direset',
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', 'Password akun "' . $user->name . '" berhasil direset.');
+    }
+
+    public function accountDestroy(Request $request, $id)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $user = User::findOrFail($id);
+
+        if ($user->id === Auth::id()) {
+            return back()->withErrors(['account' => 'Anda tidak dapat menghapus akun Anda sendiri.']);
+        }
+
+        $name = $user->name;
+        $role = $user->role;
+        $user->delete();
+
+        AuditLog::create([
+            'admin_id' => Auth::id(),
+            'activity' => 'Menghapus akun: ' . $name . ' (' . $role . ')',
+            'module' => 'Kelola Akun',
+            'old_value' => $name,
+            'new_value' => null,
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', 'Akun "' . $name . '" berhasil dihapus.');
     }
 
     public function manageLanding()
@@ -60,7 +356,7 @@ class AdminController extends Controller
             return $redirect;
         }
 
-        $hospitalName = SystemConfiguration::getVal('hospital_name', 'Mayapada Hospital');
+        $hospitalName = SystemConfiguration::getVal('hospital_name', 'Rumah Sakit Bhayangkara LEMDIKLAT');
         $hospitalLogo = SystemConfiguration::getVal('hospital_logo', '');
         $heroTitle = SystemConfiguration::getVal('hospital_hero_title', 'Empowering Your Health');
         $heroSubtitle = SystemConfiguration::getVal('hospital_hero_subtitle', 'Portal Layanan Rumah Sakit');

@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative bg-gradient-mayapada text-white overflow-hidden py-24 lg:py-32">
+<section class="relative bg-gradient-bhayangkara text-white overflow-hidden py-24 lg:py-32">
     <!-- Background grid decoration -->
     <div class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
     <!-- Soft blue glow gradient overlay -->
@@ -17,7 +17,7 @@
             <!-- Hero Texts -->
             <div class="space-y-6 lg:col-span-7">
                 <span class="inline-flex items-center space-x-2 bg-emerald-700/30 border border-emerald-500/30 text-emerald-300 text-xs px-3.5 py-1.5 rounded-full font-semibold uppercase tracking-wider animate-pulse">
-                    <i class="fa-solid fa-hospital-user mr-1.5"></i>Portal Rumah Sakit Aktif
+                    <i class="fa-solid fa-staff-snake mr-1.5"></i>SISMED &mdash; Sistem Informasi & Diagnosa Medis Terpadu
                 </span>
                 
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none text-white">
@@ -51,7 +51,7 @@
                     
                     <div class="relative bg-slate-900/50 backdrop-blur border border-white/10 p-2.5 rounded-3xl shadow-2xl overflow-hidden aspect-[4/3] flex items-center justify-center">
                         @if(!empty($hospitalImage))
-                            <img src="{{ $hospitalImage }}" alt="Hospital" class="h-full w-full object-cover rounded-2xl shadow-inner">
+                            <img src="{{ $hospitalImage }}" alt="Rumah Sakit" class="h-full w-full object-cover rounded-2xl shadow-inner">
                         @else
                             <div class="text-center p-8">
                                 <i class="fa-regular fa-image text-white/30 text-5xl mb-4"></i>
@@ -66,8 +66,78 @@
     </div>
 </section>
 
+<!-- Fitur Unggulan SISMED -->
+<section id="features" class="py-24 bg-white relative overflow-hidden">
+    <div class="absolute -top-20 right-0 h-64 w-64 rounded-full bg-emerald-500/5 blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center space-y-3 mb-16">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Fitur Unggulan</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-navy-900">Apa yang Bisa SISMED Lakukan?</h2>
+            <p class="text-sm text-slate-500 max-w-2xl mx-auto">Satu sistem terpadu yang menghubungkan pasien, Dokter IGD, dan manajemen rumah sakit — dari keluhan pertama hingga diagnosa terverifikasi.</p>
+            <div class="h-1.5 w-16 bg-emerald-700 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Fitur 1 -->
+            <div class="bg-slate-50 border border-slate-100 hover:border-emerald-500/30 p-7 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all group">
+                <div class="h-12 w-12 rounded-xl bg-navy-50 group-hover:bg-emerald-700 transition-colors flex items-center justify-center mb-5">
+                    <i class="fa-solid fa-file-waveform text-navy-800 group-hover:text-white text-lg"></i>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 mb-2 group-hover:text-emerald-700 transition-colors">Screening Kesehatan Mandiri</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Merasa kurang sehat? Isi kuisioner diagnosa dari rumah dan jawab pertanyaan screening — tanpa antre di loket pendaftaran.</p>
+            </div>
+
+            <!-- Fitur 2 -->
+            <div class="bg-slate-50 border border-slate-100 hover:border-emerald-500/30 p-7 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all group">
+                <div class="h-12 w-12 rounded-xl bg-navy-50 group-hover:bg-emerald-700 transition-colors flex items-center justify-center mb-5">
+                    <i class="fa-solid fa-route text-navy-800 group-hover:text-white text-lg"></i>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 mb-2 group-hover:text-emerald-700 transition-colors">Rekomendasi Unit Otomatis</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Sistem langsung mengarahkan Anda ke unit yang tepat — IGD, Poli Umum, atau Poli Anak — berdasarkan tingkat kegawatan gejala.</p>
+            </div>
+
+            <!-- Fitur 3 -->
+            <div class="bg-slate-50 border border-slate-100 hover:border-emerald-500/30 p-7 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all group">
+                <div class="h-12 w-12 rounded-xl bg-navy-50 group-hover:bg-emerald-700 transition-colors flex items-center justify-center mb-5">
+                    <i class="fa-solid fa-user-doctor text-navy-800 group-hover:text-white text-lg"></i>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 mb-2 group-hover:text-emerald-700 transition-colors">Verifikasi Diagnosa Dokter IGD</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Hasil screening diverifikasi Dokter IGD setelah pemeriksaan fisik, lalu tercatat resmi sebagai data rekam medis Anda.</p>
+            </div>
+
+            <!-- Fitur 4 -->
+            <div class="bg-slate-50 border border-slate-100 hover:border-emerald-500/30 p-7 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all group">
+                <div class="h-12 w-12 rounded-xl bg-navy-50 group-hover:bg-emerald-700 transition-colors flex items-center justify-center mb-5">
+                    <i class="fa-solid fa-square-poll-vertical text-navy-800 group-hover:text-white text-lg"></i>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 mb-2 group-hover:text-emerald-700 transition-colors">Survei Kepuasan & Kebersihan</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Pasien kontrol dapat menilai fasilitas, kebersihan, pelayanan dokter, dan kecepatan obat melalui barcode survei khusus.</p>
+            </div>
+
+            <!-- Fitur 5 -->
+            <div class="bg-slate-50 border border-slate-100 hover:border-emerald-500/30 p-7 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all group">
+                <div class="h-12 w-12 rounded-xl bg-navy-50 group-hover:bg-emerald-700 transition-colors flex items-center justify-center mb-5">
+                    <i class="fa-brands fa-whatsapp text-navy-800 group-hover:text-white text-xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 mb-2 group-hover:text-emerald-700 transition-colors">Keamanan OTP WhatsApp</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Pendaftaran akun diverifikasi lewat kode OTP yang dikirim langsung ke nomor WhatsApp Anda — cepat dan aman.</p>
+            </div>
+
+            <!-- Fitur 6 -->
+            <div class="bg-slate-50 border border-slate-100 hover:border-emerald-500/30 p-7 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all group">
+                <div class="h-12 w-12 rounded-xl bg-navy-50 group-hover:bg-emerald-700 transition-colors flex items-center justify-center mb-5">
+                    <i class="fa-solid fa-clock-rotate-left text-navy-800 group-hover:text-white text-lg"></i>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 mb-2 group-hover:text-emerald-700 transition-colors">Riwayat Pemeriksaan Digital</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Seluruh riwayat keluhan, hasil screening, dan diagnosa terverifikasi tersimpan rapi dan dapat diakses kembali kapan saja.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Services Grid Section -->
-<section id="services" class="py-24 bg-white">
+<section id="services" class="py-24 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="text-center space-y-3 mb-16">
@@ -103,7 +173,7 @@
 </section>
 
 <!-- Doctor Schedules (Matches the uploaded Flyer theme) -->
-<section id="doctors" class="py-24 bg-slate-50 relative overflow-hidden">
+<section id="doctors" class="py-24 bg-white relative overflow-hidden">
     <!-- Graphic accents -->
     <div class="absolute top-0 right-0 h-40 w-40 rounded-full bg-emerald-500/5 blur-2xl"></div>
     <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-navy-900/5 blur-2xl"></div>
@@ -120,22 +190,22 @@
         <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200/60 shadow-2xl shadow-navy-900/10 p-8 sm:p-12">
             <!-- Header Logos -->
             <div class="flex items-center justify-between border-b border-slate-100 pb-8 mb-8">
-                <!-- Mayapada Logo -->
+                <!-- Hospital Logo -->
                 <div class="flex items-center space-x-2">
                     @php
                         $hospitalLogo = \App\Models\SystemConfiguration::getVal('hospital_logo');
-                        $hospitalName = \App\Models\SystemConfiguration::getVal('hospital_name', 'Mayapada Hospital');
+                        $hospitalName = \App\Models\SystemConfiguration::getVal('hospital_name', 'Rumah Sakit Bhayangkara LEMDIKLAT');
                     @endphp
                     @if($hospitalLogo)
                         <img src="{{ $hospitalLogo }}" alt="{{ $hospitalName }}" class="h-10 w-10 object-contain rounded-lg">
                     @else
-                        <div class="h-10 w-10 bg-gradient-mayapada rounded-lg flex items-center justify-center text-white">
+                        <div class="h-10 w-10 bg-gradient-bhayangkara rounded-lg flex items-center justify-center text-white">
                             <i class="fa-solid fa-hospital"></i>
                         </div>
                     @endif
                     <div>
-                        <span class="font-bold text-lg text-navy-900 tracking-tight block">mayapada</span>
-                        <span class="font-medium text-lg text-emerald-700 tracking-tight block -mt-2">hospital</span>
+                        <span class="font-bold text-lg text-navy-900 tracking-tight block leading-tight">{{ $hospitalName }}</span>
+                        <span class="font-medium text-xs text-emerald-700 tracking-wider block uppercase">Portal Digital</span>
                     </div>
                 </div>
                 <!-- Partner / Deloitte text mockup -->

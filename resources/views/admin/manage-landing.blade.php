@@ -74,7 +74,7 @@
         </div>
 
         <div class="text-right">
-            <button type="submit" class="text-sm font-bold text-white bg-gradient-mayapada px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
+            <button type="submit" class="text-sm font-bold text-white bg-gradient-bhayangkara px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
                 <i class="fa-solid fa-floppy-disk text-xs"></i>
                 <span>Simpan Teks & Banner</span>
             </button>
@@ -148,7 +148,7 @@
         </div>
 
         <div class="text-right">
-            <button type="submit" class="text-sm font-bold text-white bg-gradient-mayapada px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
+            <button type="submit" class="text-sm font-bold text-white bg-gradient-bhayangkara px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
                 <i class="fa-solid fa-floppy-disk text-xs"></i>
                 <span>Simpan Jadwal Dokter</span>
             </button>
@@ -214,7 +214,7 @@
         </div>
 
         <div class="text-right">
-            <button type="submit" class="text-sm font-bold text-white bg-gradient-mayapada px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
+            <button type="submit" class="text-sm font-bold text-white bg-gradient-bhayangkara px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
                 <i class="fa-solid fa-floppy-disk text-xs"></i>
                 <span>Simpan Layanan</span>
             </button>

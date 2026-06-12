@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full text-sm font-bold text-white bg-gradient-mayapada py-3.5 rounded-xl hover:shadow-lg hover:shadow-navy-950/20 hover:scale-[1.01] transition-all flex items-center justify-center space-x-2">
+                    <button type="submit" class="w-full text-sm font-bold text-white bg-gradient-bhayangkara py-3.5 rounded-xl hover:shadow-lg hover:shadow-navy-950/20 hover:scale-[1.01] transition-all flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-circle-check text-xs"></i>
                         <span>Verifikasi OTP</span>
                     </button>
@@ -98,7 +98,7 @@
                 <div class="bg-emerald-950/80 rounded-xl p-3 border border-emerald-900/50 text-xs font-mono select-all leading-relaxed whitespace-pre-line text-slate-200">
 Halo {{ $user->name }},
 
-Kode OTP pendaftaran akun Portal Rumah Sakit Anda adalah:
+Kode OTP pendaftaran akun SISMED Anda adalah:
 
 <span class="text-lg font-bold text-white tracking-widest my-1 block text-center bg-emerald-900/50 py-1 rounded border border-emerald-800">{{ $rawOtpForTesting }}</span>
 
@@ -106,7 +106,7 @@ Kode ini berlaku selama 5 menit.
 Jangan berikan kode ini kepada siapa pun.
 
 Terima kasih.
-Portal Rumah Sakit
+SISMED - Sistem Informasi & Diagnosa Medis Terpadu
                 </div>
                 <span class="text-[9px] text-emerald-400 block mt-2 text-center font-sans font-medium">
                     *Gunakan kode di atas untuk memverifikasi pendaftaran dalam demo ini.

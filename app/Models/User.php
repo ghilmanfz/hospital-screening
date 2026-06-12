@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'phone_number', 'role', 'status', 'phone_verified_at'])]
+#[Fillable(['name', 'email', 'password', 'phone_number', 'gender', 'birth_date', 'address', 'role', 'status', 'phone_verified_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -25,6 +25,16 @@ class User extends Authenticatable
     public function isPasien(): bool
     {
         return $this->role === 'pasien';
+    }
+
+    public function isDokter(): bool
+    {
+        return $this->role === 'dokter';
+    }
+
+    public function age(): ?int
+    {
+        return $this->birth_date ? $this->birth_date->age : null;
     }
 
     public function isActive(): bool
@@ -56,6 +66,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'birth_date' => 'date',
             'password' => 'hashed',
         ];
     }

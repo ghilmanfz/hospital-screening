@@ -9,7 +9,7 @@ class PublicController extends Controller
 {
     public function index()
     {
-        $hospitalName = SystemConfiguration::getVal('hospital_name', 'Mayapada Hospital');
+        $hospitalName = SystemConfiguration::getVal('hospital_name', 'Rumah Sakit Bhayangkara LEMDIKLAT');
         $heroTitle = SystemConfiguration::getVal('hospital_hero_title', 'Empowering Your Health');
         $heroSubtitle = SystemConfiguration::getVal('hospital_hero_subtitle', 'Portal Layanan Rumah Sakit');
         $hospitalImage = SystemConfiguration::getVal('hospital_image', 'https://images.unsplash.com/photo-1586773860418-d3b3b998de55?auto=format&fit=crop&w=1200&q=80');

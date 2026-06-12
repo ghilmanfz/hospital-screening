@@ -22,6 +22,9 @@ class PatientController extends Controller
             if ($user->isAdmin()) {
                 return redirect()->route('admin.dashboard');
             }
+            if ($user->isDokter()) {
+                return redirect()->route('dokter.dashboard');
+            }
             abort(403, 'Akses ditolak.');
         }
         return null;
@@ -42,11 +45,11 @@ class PatientController extends Controller
 
         // Get latest diagnosis to determine current active step/status
         $latest = $diagnoses->first();
-        
+
         $statusSurvei = 'Belum Mengisi Diagnosa';
         $activeDiagnosisId = null;
 
-        if ($latest) {
+        if ($latest && $latest->status_survei !== 'Selesai & Diarsipkan') {
             $statusSurvei = $latest->status_survei;
             $activeDiagnosisId = $latest->id;
         }
@@ -54,7 +57,10 @@ class PatientController extends Controller
         // Load configured screening questions
         $questions = json_decode(SystemConfiguration::getVal('screening_questions', '[]'), true);
 
-        return view('patient.dashboard', compact('user', 'diagnoses', 'latest', 'statusSurvei', 'activeDiagnosisId', 'questions'));
+        // Poli doctors are informational only (not actors) — their practice schedule shows at the top of the dashboard
+        $doctorSchedules = json_decode(SystemConfiguration::getVal('doctor_schedules', '[]'), true);
+
+        return view('patient.dashboard', compact('user', 'diagnoses', 'latest', 'statusSurvei', 'activeDiagnosisId', 'questions', 'doctorSchedules'));
     }
 
     public function inputDiagnosa(Request $request)
@@ -69,9 +75,10 @@ class PatientController extends Controller
 
         $user = Auth::user();
 
-        // Create new diagnosis record
+        // Create new diagnosis record (jalur layanan: Merasa Kurang Sehat)
         Diagnosis::create([
             'user_id' => $user->id,
+            'jenis_layanan' => 'kurang_sehat',
             'diagnosa_singkat' => $request->diagnosa_singkat,
             'status_survei' => 'Belum Mengisi Screening',
         ]);
@@ -146,6 +153,8 @@ class PatientController extends Controller
             'screening_result' => $result,
             'profit_amount' => $profit,
             'status_survei' => 'Belum Mengisi Survei',
+            // Hasil screening mandiri menunggu verifikasi Dokter IGD setelah pemeriksaan fisik
+            'verification_status' => 'Menunggu Verifikasi',
         ]);
 
         return redirect()->route('patient.dashboard')->with('success', 'Screening selesai! Hasil arahan pelayanan Anda telah keluar.');
@@ -181,6 +190,38 @@ class PatientController extends Controller
         return redirect()->route('patient.dashboard')->with('success', 'Terima kasih atas penilaian Anda! Survei berhasil disimpan.');
     }
 
+    /**
+     * Jalur layanan "Kontrol": pasien mengisi survei kepuasan layanan & kebersihan
+     * (di lapangan diakses lewat barcode khusus), tanpa kuisioner diagnosa/screening.
+     */
+    public function submitKontrolSurvey(Request $request)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $request->validate([
+            'survey_facilities' => 'required|integer|between:1,5',
+            'survey_cleanliness' => 'required|integer|between:1,5',
+            'survey_doctor' => 'required|integer|between:1,5',
+            'survey_pharmacy' => 'required|integer|between:1,5',
+        ]);
+
+        Diagnosis::create([
+            'user_id' => Auth::id(),
+            'jenis_layanan' => 'kontrol',
+            'diagnosa_singkat' => 'Kunjungan Kontrol',
+            'survey_facilities' => $request->survey_facilities,
+            'survey_cleanliness' => $request->survey_cleanliness,
+            'survey_doctor' => $request->survey_doctor,
+            'survey_pharmacy' => $request->survey_pharmacy,
+            // Langsung diarsipkan agar dasbor kembali ke pilihan layanan
+            'status_survei' => 'Selesai & Diarsipkan',
+        ]);
+
+        return redirect()->route('patient.dashboard')->with('success', 'Terima kasih! Survei kepuasan kunjungan kontrol Anda berhasil disimpan.');
+    }
+
     public function showProfile()
     {
         if ($redirect = $this->checkAuth()) {
@@ -201,11 +242,17 @@ class PatientController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'gender' => 'required|in:Laki-laki,Perempuan',
+            'birth_date' => 'required|date|before:today',
+            'address' => 'required|string|max:500',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+            'address' => $request->address,
         ]);
 
         return back()->with('success', 'Profil Anda berhasil diperbarui.');

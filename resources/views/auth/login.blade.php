@@ -10,11 +10,11 @@
         <div class="bg-white border border-slate-200/60 shadow-xl rounded-3xl p-8 sm:p-10 relative overflow-hidden">
             <!-- Header branding -->
             <div class="text-center space-y-2 mb-8">
-                <div class="h-12 w-12 rounded-2xl bg-gradient-mayapada flex items-center justify-center mx-auto shadow-md">
+                <div class="h-12 w-12 rounded-2xl bg-gradient-bhayangkara flex items-center justify-center mx-auto shadow-md">
                     <i class="fa-solid fa-right-to-bracket text-white text-lg"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-navy-900">Selamat Datang Kembali</h2>
-                <p class="text-xs text-slate-500">Masuk ke Portal Rumah Sakit untuk akses cepat</p>
+                <p class="text-xs text-slate-500">Masuk ke SISMED &mdash; Sistem Informasi & Diagnosa Medis Terpadu</p>
             </div>
 
             <!-- Alerts -->
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full text-sm font-bold text-white bg-gradient-mayapada py-3.5 rounded-xl hover:shadow-lg hover:shadow-navy-950/20 hover:scale-[1.01] transition-all flex items-center justify-center space-x-2">
+                    <button type="submit" class="w-full text-sm font-bold text-white bg-gradient-bhayangkara py-3.5 rounded-xl hover:shadow-lg hover:shadow-navy-950/20 hover:scale-[1.01] transition-all flex items-center justify-center space-x-2">
                         <span>Masuk ke Dashboard</span>
                         <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
                     </button>
@@ -84,8 +84,12 @@
                         Admin: <span class="font-mono text-emerald-700">admin@hospital.com</span> / <span class="font-mono text-emerald-700">admin123</span>
                     </p>
                     <p class="font-bold text-left px-4">
+                        Dokter IGD: <span class="font-mono text-emerald-700">dokter@hospital.com</span> / <span class="font-mono text-emerald-700">dokter123</span>
+                    </p>
+                    <p class="font-bold text-left px-4">
                         Pasien: <span class="font-mono text-emerald-700">budi@example.com</span> / <span class="font-mono text-emerald-700">pasien123</span>
                     </p>
+                    <p class="text-[10px] text-slate-400 mt-1.5 px-4 text-left">*Akun Dokter IGD adalah 1 akun bersama yang dibuatkan oleh Admin sistem.</p>
                 </div>
             </div>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\LoginAttempt;
 use App\Models\OtpVerification;
 use App\Models\SystemConfiguration;
 use App\Models\WhatsappMessageLog;
@@ -16,11 +17,23 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return Auth::user()->isAdmin()
-                ? redirect()->route('admin.dashboard')
-                : redirect()->route('patient.dashboard');
+            return $this->redirectByRole(Auth::user());
         }
         return view('auth.login');
+    }
+
+    /**
+     * Redirect user to the proper dashboard based on role
+     */
+    private function redirectByRole(User $user)
+    {
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+        if ($user->isDokter()) {
+            return redirect()->route('dokter.dashboard');
+        }
+        return redirect()->route('patient.dashboard');
     }
 
     public function login(Request $request)
@@ -40,6 +53,7 @@ class AuthController extends Controller
 
         if ($user && Hash::check($password, $user->password)) {
             if ($user->status === 'blocked') {
+                $this->logLoginAttempt($request, $user, 'Gagal', 'Akun diblokir');
                 return back()->withErrors(['email_phone' => 'Akun Anda diblokir. Silakan hubungi admin.']);
             }
 
@@ -51,13 +65,31 @@ class AuthController extends Controller
                 return redirect()->route('auth.otp')->with('info', 'Akun Anda belum diverifikasi. Kode OTP baru telah dikirim.');
             }
 
+            $this->logLoginAttempt($request, $user, 'Berhasil', null);
             Auth::login($user);
-            return $user->isAdmin()
-                ? redirect()->route('admin.dashboard')
-                : redirect()->route('patient.dashboard');
+            return $this->redirectByRole($user);
         }
 
-        return back()->withErrors(['email_phone' => 'Username/Email/No WhatsApp atau password salah.']);
+        // Log the failed attempt so admin can monitor patients struggling to login
+        $reason = $user ? 'Password salah' : 'Username/Email/No WhatsApp tidak terdaftar';
+        $this->logLoginAttempt($request, $user, 'Gagal', $reason);
+
+        return back()->withErrors(['email_phone' => 'Peringatan: Username/Email/No WhatsApp atau password yang Anda masukkan salah.']);
+    }
+
+    /**
+     * Record login attempt (failed or successful) for admin monitoring
+     */
+    private function logLoginAttempt(Request $request, ?User $user, string $status, ?string $reason)
+    {
+        LoginAttempt::create([
+            'user_id' => $user?->id,
+            'identifier' => $request->email_phone,
+            'status' => $status,
+            'reason' => $reason,
+            'ip_address' => $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 255),
+        ]);
     }
 
     public function showRegister()
@@ -71,6 +103,9 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'phone_number' => 'required|string|unique:users,phone_number',
             'email' => 'nullable|email|unique:users,email',
+            'gender' => 'required|in:Laki-laki,Perempuan',
+            'birth_date' => 'required|date|before:today',
+            'address' => 'required|string|max:500',
             'password' => 'required|min:6|confirmed',
         ]);
 
@@ -85,6 +120,9 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone_number' => $phone,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+            'address' => $request->address,
             'password' => Hash::make($request->password),
             'role' => 'pasien',
             'status' => 'pending_verification',

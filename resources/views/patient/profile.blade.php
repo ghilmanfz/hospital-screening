@@ -65,10 +65,39 @@
                     <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" placeholder="budi@example.com"
                         class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all text-sm outline-none text-slate-800 placeholder-slate-400 font-medium">
                 </div>
+
+                <!-- Jenis Kelamin -->
+                <div>
+                    <label for="gender" class="block text-xs font-bold text-navy-900 uppercase tracking-wider mb-2">Jenis Kelamin</label>
+                    <select name="gender" id="gender" required
+                        class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all text-sm outline-none text-slate-800 font-medium">
+                        <option value="" disabled {{ old('gender', $user->gender) ? '' : 'selected' }}>Pilih jenis kelamin...</option>
+                        <option value="Laki-laki" {{ old('gender', $user->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ old('gender', $user->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                </div>
+
+                <!-- Tanggal Lahir -->
+                <div>
+                    <label for="birth_date" class="block text-xs font-bold text-navy-900 uppercase tracking-wider mb-2">Tanggal Lahir</label>
+                    <input type="date" name="birth_date" id="birth_date" required max="{{ date('Y-m-d') }}"
+                        value="{{ old('birth_date', $user->birth_date ? $user->birth_date->format('Y-m-d') : '') }}"
+                        class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all text-sm outline-none text-slate-800 font-medium">
+                    @if($user->age() !== null)
+                    <span class="text-[10px] text-slate-400 block mt-1.5 font-semibold">Usia saat ini: {{ $user->age() }} tahun</span>
+                    @endif
+                </div>
+
+                <!-- Alamat Rumah -->
+                <div class="md:col-span-2">
+                    <label for="address" class="block text-xs font-bold text-navy-900 uppercase tracking-wider mb-2">Alamat Rumah</label>
+                    <textarea name="address" id="address" rows="3" required placeholder="Contoh: Jl. Merdeka No. 12, RT 03/RW 05, Kel. Sukamaju, Jakarta Selatan"
+                        class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all text-sm outline-none text-slate-800 placeholder-slate-400 font-medium">{{ old('address', $user->address) }}</textarea>
+                </div>
             </div>
 
             <div class="border-t border-slate-100 pt-6 text-right">
-                <button type="submit" class="text-sm font-bold text-white bg-gradient-mayapada px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-navy-950/20 hover:scale-[1.01] transition-all flex items-center justify-center space-x-2 ml-auto">
+                <button type="submit" class="text-sm font-bold text-white bg-gradient-bhayangkara px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-navy-950/20 hover:scale-[1.01] transition-all flex items-center justify-center space-x-2 ml-auto">
                     <i class="fa-solid fa-floppy-disk text-xs"></i>
                     <span>Simpan Perubahan</span>
                 </button>
