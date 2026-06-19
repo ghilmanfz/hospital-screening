@@ -160,7 +160,7 @@
                 <div class="space-y-4 col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-3">
                         @if($hospitalLogo)
-                            <img src="{{ $hospitalLogo }}" alt="{{ $hospitalName }}" class="h-10 w-10 object-contain brightness-0 invert">
+                            <img src="{{ $hospitalLogo }}" alt="{{ $hospitalName }}" class="h-10 w-10 object-contain rounded-xl bg-white p-1 shadow-sm">
                         @else
                             <div class="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center">
                                 <i class="fa-solid fa-staff-snake text-white text-md"></i>
