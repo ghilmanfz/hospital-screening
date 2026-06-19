@@ -104,6 +104,7 @@
                 </div>
             </a>
 
+            @guest
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="{{ route('public.home') }}" class="text-sm font-medium text-slate-600 hover:text-navy-900 transition-colors">Beranda</a>
@@ -111,6 +112,7 @@
                 <a href="{{ route('public.home') }}#services" class="text-sm font-medium text-slate-600 hover:text-navy-900 transition-colors">Layanan</a>
                 <a href="{{ route('public.home') }}#doctors" class="text-sm font-medium text-slate-600 hover:text-navy-900 transition-colors">Jadwal Dokter</a>
             </nav>
+            @endguest
 
             <!-- Auth Buttons -->
             <div class="flex items-center space-x-4">

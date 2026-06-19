@@ -127,34 +127,38 @@
 
     </div>
 
-    <!-- Jadwal Praktek Dokter Poli (informasi, dokter poli bukan aktor sistem) -->
-    @if(!empty($doctorSchedules))
+    <!-- Event Rumah Sakit -->
+    @if(!empty($hospitalEvents))
     <div class="bg-white border border-slate-200/60 rounded-3xl shadow-xl p-6 sm:p-8 mb-10">
         <div class="flex items-center justify-between mb-5">
             <div>
-                <h3 class="font-extrabold text-navy-900 text-base">Jadwal Praktek Dokter Poli</h3>
-                <p class="text-xs text-slate-400">Informasi jadwal konsultasi dokter poli spesialis di rumah sakit kami</p>
+                <h3 class="font-extrabold text-navy-900 text-base">Event Rumah Sakit</h3>
+                <p class="text-xs text-slate-400">Informasi kegiatan dan program kesehatan yang dapat diikuti pasien</p>
             </div>
-            <div class="h-10 w-10 bg-navy-50 rounded-xl flex items-center justify-center text-navy-900">
-                <i class="fa-regular fa-calendar-days"></i>
+            <div class="h-10 w-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-700">
+                <i class="fa-solid fa-calendar-check"></i>
             </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach($doctorSchedules as $sched)
-            <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex items-center space-x-3.5">
-                <div class="h-12 w-12 rounded-full bg-white border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                    @if(!empty($sched['foto']))
-                        <img src="{{ $sched['foto'] }}" alt="{{ $sched['nama'] }}" class="h-full w-full object-cover">
-                    @else
-                        <i class="fa-solid fa-user-doctor text-navy-800"></i>
-                    @endif
+            @foreach($hospitalEvents as $event)
+            <div class="bg-slate-50 border border-slate-100 p-5 rounded-2xl flex items-start space-x-3.5">
+                <div class="h-12 w-12 rounded-xl bg-white border border-slate-200 flex-shrink-0 flex items-center justify-center text-navy-900">
+                    <i class="fa-solid {{ $event['icon'] ?? 'fa-calendar-check' }}"></i>
                 </div>
                 <div class="min-w-0">
-                    <h5 class="font-bold text-slate-900 text-xs truncate">{{ $sched['nama'] }}</h5>
-                    <p class="text-[10px] text-slate-500 font-medium truncate">{{ $sched['spesialis'] ?? '' }}</p>
-                    <span class="text-[10px] font-bold text-navy-900 bg-navy-100/70 px-2 py-0.5 rounded inline-block mt-1">
-                        <i class="fa-regular fa-clock mr-1"></i>{{ $sched['jadwal'] ?? '-' }}
-                    </span>
+                    <h5 class="font-bold text-slate-900 text-sm leading-snug">{{ $event['title'] ?? 'Event Rumah Sakit' }}</h5>
+                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed mt-1">{{ $event['desc'] ?? '' }}</p>
+                    <div class="flex flex-wrap gap-1.5 mt-3">
+                        <span class="text-[10px] font-bold text-navy-900 bg-navy-100/70 px-2 py-0.5 rounded inline-flex items-center">
+                            <i class="fa-regular fa-calendar mr-1"></i>{{ $event['date'] ?? '-' }}
+                        </span>
+                        <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded inline-flex items-center">
+                            <i class="fa-regular fa-clock mr-1"></i>{{ $event['time'] ?? '-' }}
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-semibold mt-2">
+                        <i class="fa-solid fa-location-dot mr-1 text-emerald-700"></i>{{ $event['location'] ?? 'Area Rumah Sakit' }}
+                    </p>
                 </div>
             </div>
             @endforeach

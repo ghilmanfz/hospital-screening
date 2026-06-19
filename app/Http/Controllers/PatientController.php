@@ -57,10 +57,39 @@ class PatientController extends Controller
         // Load configured screening questions
         $questions = json_decode(SystemConfiguration::getVal('screening_questions', '[]'), true);
 
-        // Poli doctors are informational only (not actors) — their practice schedule shows at the top of the dashboard
-        $doctorSchedules = json_decode(SystemConfiguration::getVal('doctor_schedules', '[]'), true);
+        $defaultEvents = [
+            [
+                'title' => 'Bakti Sosial & Pemeriksaan Kesehatan',
+                'date' => 'Setiap Jumat',
+                'time' => '08.00 - 11.00 WIB',
+                'location' => 'Lobi Utama Rumah Sakit',
+                'desc' => 'Pemeriksaan tekanan darah, gula darah sewaktu, dan konsultasi kesehatan singkat.',
+                'icon' => 'fa-hand-holding-medical',
+            ],
+            [
+                'title' => 'Edukasi Kesehatan Keluarga',
+                'date' => 'Minggu ke-2 setiap bulan',
+                'time' => '09.00 - 10.30 WIB',
+                'location' => 'Aula Edukasi Pasien',
+                'desc' => 'Sesi edukasi pencegahan penyakit, pola hidup sehat, dan kesiapsiagaan keluarga.',
+                'icon' => 'fa-people-group',
+            ],
+            [
+                'title' => 'Donor Darah Rumah Sakit',
+                'date' => 'Setiap Rabu',
+                'time' => '09.00 - 13.00 WIB',
+                'location' => 'Unit Transfusi Darah',
+                'desc' => 'Kegiatan donor darah rutin untuk mendukung kebutuhan layanan pasien.',
+                'icon' => 'fa-droplet',
+            ],
+        ];
 
-        return view('patient.dashboard', compact('user', 'diagnoses', 'latest', 'statusSurvei', 'activeDiagnosisId', 'questions', 'doctorSchedules'));
+        $hospitalEvents = json_decode(SystemConfiguration::getVal('hospital_events', json_encode($defaultEvents)), true);
+        if (!is_array($hospitalEvents) || empty($hospitalEvents)) {
+            $hospitalEvents = $defaultEvents;
+        }
+
+        return view('patient.dashboard', compact('user', 'diagnoses', 'latest', 'statusSurvei', 'activeDiagnosisId', 'questions', 'hospitalEvents'));
     }
 
     public function inputDiagnosa(Request $request)

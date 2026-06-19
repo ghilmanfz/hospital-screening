@@ -7,3 +7,187 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@layer components {
+    .hs-datatable {
+        width: 100%;
+    }
+
+    .hs-datatable-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding: 0.875rem;
+        border: 1px solid #f1f5f9;
+        border-radius: 1rem;
+        background: #f8fafc;
+    }
+
+    .hs-datatable-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+    }
+
+    .hs-datatable-field span {
+        color: #94a3b8;
+        font-size: 0.625rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .hs-datatable-search {
+        flex: 1 1 16rem;
+        min-width: min(100%, 16rem);
+    }
+
+    .hs-datatable-page-size {
+        flex: 0 0 6.5rem;
+    }
+
+    .hs-datatable-input-wrap {
+        position: relative;
+    }
+
+    .hs-datatable-input-wrap i {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        color: #94a3b8;
+        font-size: 0.75rem;
+        transform: translateY(-50%);
+    }
+
+    .hs-datatable input,
+    .hs-datatable select {
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        background: #ffffff;
+        color: #334155;
+        font-size: 0.75rem;
+        font-weight: 700;
+        outline: none;
+        transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+    }
+
+    .hs-datatable input {
+        padding: 0.625rem 0.875rem 0.625rem 2.25rem;
+    }
+
+    .hs-datatable select {
+        padding: 0.625rem 0.75rem;
+    }
+
+    .hs-datatable input:focus,
+    .hs-datatable select:focus {
+        border-color: #008751;
+        box-shadow: 0 0 0 3px rgba(0, 135, 81, 0.12);
+    }
+
+    .hs-datatable input:disabled,
+    .hs-datatable select:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .hs-datatable-table th.hs-datatable-sortable {
+        cursor: pointer;
+        outline: none;
+        white-space: nowrap;
+    }
+
+    .hs-datatable-table th.hs-datatable-sortable:focus-visible {
+        color: #0b2545;
+    }
+
+    .hs-datatable-sort-icon {
+        display: inline-flex;
+        margin-left: 0.375rem;
+        color: #cbd5e1;
+        font-size: 0.625rem;
+        vertical-align: middle;
+    }
+
+    .hs-datatable-table th.is-sorted,
+    .hs-datatable-table th.is-sorted .hs-datatable-sort-icon {
+        color: #008751;
+    }
+
+    .hs-datatable-empty {
+        padding: 2rem 1rem;
+        color: #94a3b8;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .hs-datatable-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        color: #64748b;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .hs-datatable-pagination {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .hs-datatable-page-info {
+        color: #475569;
+        font-size: 0.6875rem;
+        font-weight: 800;
+    }
+
+    .hs-datatable-page-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.625rem;
+        background: #ffffff;
+        color: #0b2545;
+        font-size: 0.75rem;
+        transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .hs-datatable-page-button:hover:not(:disabled) {
+        border-color: #0b2545;
+        background: #0b2545;
+        color: #ffffff;
+    }
+
+    .hs-datatable-page-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+    }
+
+    @media (max-width: 640px) {
+        .hs-datatable-toolbar {
+            align-items: stretch;
+        }
+
+        .hs-datatable-page-size {
+            flex-basis: 100%;
+        }
+
+        .hs-datatable-footer {
+            justify-content: center;
+            text-align: center;
+        }
+    }
+}
