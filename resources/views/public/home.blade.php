@@ -186,7 +186,7 @@
             <div class="h-1.5 w-16 bg-navy-900 mx-auto rounded-full"></div>
         </div>
 
-        <!-- Custom Card styled like the Employee Healthy Week flyer -->
+        <!-- Custom Card styled as doctor practice schedule -->
         <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200/60 shadow-2xl shadow-navy-900/10 p-8 sm:p-12">
             <!-- Header Logos -->
             <div class="flex items-center border-b border-slate-100 pb-8 mb-8">
@@ -212,19 +212,19 @@
 
             <!-- Flyer Title -->
             <div class="text-center mb-10">
-                <i class="fa-solid fa-stethoscope text-navy-800 text-3xl mb-2"></i>
+                <i class="fa-solid fa-user-doctor text-navy-800 text-3xl mb-2"></i>
                 <h3 class="text-3xl sm:text-4xl font-black text-navy-900 leading-none uppercase tracking-tight">
-                    employee healthy week
+                    Jadwal Praktik Dokter
                 </h3>
                 <span class="inline-block bg-emerald-700 text-white font-bold text-xs uppercase px-3 py-1 rounded mt-2">
-                    Health Talk & Vaccine on Site
+                    Dokter Spesialis & Layanan Poli
                 </span>
                 <p class="text-sm font-semibold text-slate-600 mt-4 flex items-center justify-center space-x-2">
                     <i class="fa-regular fa-calendar-check text-emerald-700"></i>
-                    <span>11 - 12 JUNI 2026</span>
+                    <span>Jadwal mengikuti praktik masing-masing dokter</span>
                     <span class="text-slate-300">|</span>
                     <i class="fa-solid fa-location-dot text-emerald-700"></i>
-                    <span>Sadewa Saraswati Room, 32nd Floor</span>
+                    <span>Poliklinik Rumah Sakit</span>
                 </p>
             </div>
 
@@ -236,12 +236,12 @@
                 
                 @foreach($chunks as $chunkIdx => $chunkDocs)
                 <div class="bg-gradient-to-b from-navy-50 to-white border border-slate-200/50 p-6 rounded-2xl relative space-y-6">
-                    <div class="absolute -top-3 right-6 bg-{{ $chunkIdx == 0 ? 'navy-805' : 'emerald-700' }} text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
-                        {{ $chunkIdx == 0 ? 'Sesi A' : 'Sesi B' }}
+                    <div class="absolute -top-3 right-6 bg-{{ $chunkIdx == 0 ? 'navy-900' : 'emerald-700' }} text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
+                        {{ $chunkIdx == 0 ? 'Daftar Dokter' : 'Jadwal Lainnya' }}
                     </div>
                     
                     <h4 class="font-bold text-navy-900 text-sm border-b border-navy-100 pb-3 mb-5 uppercase tracking-wider flex items-center">
-                        <i class="fa-regular fa-clock mr-2 text-navy-900"></i>Sesi Konsultasi
+                        <i class="fa-regular fa-calendar-days mr-2 text-navy-900"></i>Jadwal Praktik
                     </h4>
 
                     <div class="space-y-6">
@@ -270,11 +270,11 @@
 
             </div>
 
-            <!-- Vaccinations Highlight Footer -->
+            <!-- Schedule Information Footer -->
             <div class="mt-10 bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-center">
                 <p class="text-sm text-emerald-800 font-semibold flex items-center justify-center">
-                    <i class="fa-solid fa-syringe mr-2 text-emerald-700"></i>
-                    <span>Influenza, DBD and Tifoid Vaccine are Provided on Srikandi Surya, 32nd Floor</span>
+                    <i class="fa-solid fa-circle-info mr-2 text-emerald-700"></i>
+                    <span>Informasi jadwal dapat berubah sewaktu-waktu. Hubungi call center untuk konfirmasi ketersediaan dokter.</span>
                 </p>
             </div>
 
