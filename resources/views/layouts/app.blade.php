@@ -13,7 +13,10 @@
     
     <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
+    <!-- jQuery DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
     <!-- Chart.js CDN for Dashboards -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -74,6 +77,57 @@
         .glow-green {
             box-shadow: 0 0 15px rgba(0, 135, 81, 0.4);
         }
+
+        /* ===== jQuery DataTables — tema SISMED (navy/emerald) ===== */
+        .dataTables_wrapper { font-size: 0.8rem; width: 100%; }
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter { margin-bottom: 1.25rem; }
+        .dataTables_wrapper .dataTables_filter { text-align: right; }
+        .dataTables_wrapper .dataTables_length label,
+        .dataTables_wrapper .dataTables_filter label {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-size: 0.7rem; font-weight: 800; color: #64748b;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .dataTables_wrapper .dataTables_length select,
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #e2e8f0; border-radius: 0.65rem; background: #fff;
+            color: #334155; font-size: 0.75rem; font-weight: 600;
+            padding: 0.5rem 0.75rem; outline: none; transition: border-color .15s, box-shadow .15s;
+        }
+        .dataTables_wrapper .dataTables_filter input { min-width: 15rem; }
+        .dataTables_wrapper .dataTables_length select:focus,
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #008751; box-shadow: 0 0 0 3px rgba(0,135,81,.12);
+        }
+        .dataTables_wrapper .dataTables_info {
+            color: #64748b; font-size: 0.7rem; font-weight: 700; padding-top: 1rem;
+        }
+        .dataTables_wrapper .dataTables_paginate { padding-top: 1rem; }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            border-radius: 0.55rem !important; border: 1px solid #e2e8f0 !important;
+            margin: 0 2px; padding: 0.4rem 0.75rem !important; font-size: 0.72rem !important;
+            color: #0b2545 !important; background: #fff !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: #0b2545 !important; border-color: #0b2545 !important; color: #fff !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
+            background: #008751 !important; border-color: #008751 !important; color: #fff !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            opacity: .4; color: #94a3b8 !important; background: #fff !important; border-color: #e2e8f0 !important;
+        }
+        table.dataTable { border-collapse: collapse !important; width: 100% !important; }
+        table.dataTable thead th { cursor: pointer; outline: none; }
+        table.dataTable thead th.nosort { cursor: default; }
+        table.dataTable thead th.nosort::before,
+        table.dataTable thead th.nosort::after { display: none !important; }
+        table.dataTable tbody td { border-top: none !important; }
+        /* responsif: izinkan scroll horizontal pada layar kecil */
+        .dataTables_wrapper .dataTables_scroll { overflow-x: auto; }
     </style>
     @yield('styles')
 </head>
@@ -224,6 +278,42 @@
             </div>
         </div>
     </footer>
+
+    <!-- jQuery + DataTables (CDN) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script>
+        (function () {
+            function initDataTables() {
+                if (!window.jQuery || !jQuery.fn || !jQuery.fn.DataTable) return;
+                jQuery('.js-datatable').each(function () {
+                    if (jQuery.fn.DataTable.isDataTable(this)) return;
+                    jQuery(this).DataTable({
+                        pageLength: 10,
+                        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Semua']],
+                        order: [],
+                        columnDefs: [{ orderable: false, targets: 'nosort' }],
+                        language: {
+                            search: "Cari:",
+                            searchPlaceholder: "Ketik untuk memfilter...",
+                            lengthMenu: "Tampilkan _MENU_ baris",
+                            info: "Menampilkan _START_&ndash;_END_ dari _TOTAL_ data",
+                            infoEmpty: "Menampilkan 0 data",
+                            infoFiltered: "(disaring dari _MAX_ total data)",
+                            zeroRecords: "Tidak ada data yang cocok dengan pencarian",
+                            emptyTable: "Belum ada data",
+                            paginate: { first: "Awal", last: "Akhir", next: "Berikutnya", previous: "Sebelumnya" }
+                        }
+                    });
+                });
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initDataTables);
+            } else {
+                initDataTables();
+            }
+        })();
+    </script>
 
     @yield('scripts')
 </body>

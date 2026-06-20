@@ -33,18 +33,18 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm" data-mobile-cards="true">
+        <table class="w-full text-left text-sm js-datatable" data-datatable="false">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Nama Penyakit</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Kode ICD</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Kategori</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Gejala Umum</th>
-                    <th class="py-4 font-bold text-xs uppercase tracking-wider text-right">Aksi</th>
+                    <th class="py-4 font-bold text-xs uppercase tracking-wider text-right nosort">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                @forelse($diseases as $disease)
+                @foreach($diseases as $disease)
                 <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="py-4 font-bold text-navy-900" data-label="Nama Penyakit" data-card-primary="true">{{ $disease->nama_penyakit }}</td>
                     <td class="py-4 whitespace-nowrap" data-label="Kode ICD">
@@ -74,103 +74,99 @@
                         </button>
                     </td>
                 </tr>
-
-                <!-- Edit Modal -->
-                <div x-show="editId === {{ $disease->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6">
-                    <div class="bg-white border border-slate-100 shadow-2xl rounded-3xl w-full max-w-lg flex flex-col max-h-[85vh]" @click.away="editId = null">
-                        <div class="p-6 sm:p-8 pb-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
-                            <div class="flex items-center space-x-2.5">
-                                <div class="h-9 w-9 rounded-xl bg-navy-50 flex items-center justify-center text-navy-800">
-                                    <i class="fa-solid fa-pen text-sm"></i>
-                                </div>
-                                <h4 class="font-extrabold text-navy-900 text-sm">Ubah Data Penyakit</h4>
-                            </div>
-                            <button @click="editId = null" class="h-8 w-8 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors">
-                                <i class="fa-solid fa-xmark text-lg"></i>
-                            </button>
-                        </div>
-
-                        <form action="{{ route('dokter.penyakit.update', $disease->id) }}" method="POST" class="p-6 sm:p-8 py-5 overflow-y-auto space-y-4 flex-grow">
-                            @csrf
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="sm:col-span-2">
-                                    <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Nama Penyakit</label>
-                                    <input type="text" name="nama_penyakit" required value="{{ $disease->nama_penyakit }}"
-                                        class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-semibold text-slate-800">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Kode ICD (Opsional)</label>
-                                    <input type="text" name="kode_icd" value="{{ $disease->kode_icd }}" placeholder="Contoh: J06.9"
-                                        class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-mono font-semibold text-slate-800">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Kategori</label>
-                                    <select name="kategori" class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-semibold text-slate-800">
-                                        <option value="Umum" {{ $disease->kategori == 'Umum' ? 'selected' : '' }}>Umum</option>
-                                        <option value="Anak" {{ $disease->kategori == 'Anak' ? 'selected' : '' }}>Anak</option>
-                                        <option value="Gawat Darurat" {{ $disease->kategori == 'Gawat Darurat' ? 'selected' : '' }}>Gawat Darurat</option>
-                                    </select>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Gejala Umum</label>
-                                    <textarea name="gejala_umum" rows="2"
-                                        class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-medium text-slate-800">{{ $disease->gejala_umum }}</textarea>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Tindakan / Penanganan</label>
-                                    <textarea name="tindakan" rows="2"
-                                        class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-medium text-slate-800">{{ $disease->tindakan }}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="pt-2 flex justify-end space-x-2">
-                                <button type="button" @click="editId = null" class="text-xs font-bold text-slate-700 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-xl transition-colors">
-                                    Batal
-                                </button>
-                                <button type="submit" class="text-xs font-bold text-white bg-gradient-bhayangkara px-5 py-2.5 rounded-xl hover:shadow-lg transition-all flex items-center space-x-1.5">
-                                    <i class="fa-solid fa-floppy-disk text-[10px]"></i>
-                                    <span>Simpan Perubahan</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Delete Confirm Modal -->
-                <div x-show="deleteId === {{ $disease->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6">
-                    <div class="bg-white border border-slate-100 shadow-2xl rounded-3xl w-full max-w-sm p-8 text-center space-y-4" @click.away="deleteId = null">
-                        <div class="h-14 w-14 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto">
-                            <i class="fa-solid fa-trash-can text-xl"></i>
-                        </div>
-                        <h4 class="font-extrabold text-navy-900 text-base">Hapus Penyakit Ini?</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">
-                            <strong>{{ $disease->nama_penyakit }}</strong> akan dihapus dari master data. Riwayat verifikasi yang sudah ada tidak akan terpengaruh.
-                        </p>
-                        <div class="flex justify-center space-x-2 pt-2">
-                            <button type="button" @click="deleteId = null" class="text-xs font-bold text-slate-700 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-xl transition-colors">
-                                Batal
-                            </button>
-                            <form action="{{ route('dokter.penyakit.delete', $disease->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-xl transition-all flex items-center space-x-1.5">
-                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                                    <span>Ya, Hapus</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                @empty
-                <tr>
-                    <td colspan="5" class="py-8 text-center text-slate-400">
-                        Belum ada data penyakit. Klik "Tambah Penyakit" untuk menambahkan.
-                    </td>
-                </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>
+
+    <!-- Modal Ubah & Hapus (dipindah keluar tbody agar tidak dihapus DataTables saat redraw) -->
+    @foreach($diseases as $disease)
+        <!-- Edit Modal -->
+        <div x-show="editId === {{ $disease->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6">
+            <div class="bg-white border border-slate-100 shadow-2xl rounded-3xl w-full max-w-lg flex flex-col max-h-[85vh]" @click.away="editId = null">
+                <div class="p-6 sm:p-8 pb-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="h-9 w-9 rounded-xl bg-navy-50 flex items-center justify-center text-navy-800">
+                            <i class="fa-solid fa-pen text-sm"></i>
+                        </div>
+                        <h4 class="font-extrabold text-navy-900 text-sm">Ubah Data Penyakit</h4>
+                    </div>
+                    <button @click="editId = null" class="h-8 w-8 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <form action="{{ route('dokter.penyakit.update', $disease->id) }}" method="POST" class="p-6 sm:p-8 py-5 overflow-y-auto space-y-4 flex-grow">
+                    @csrf
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Nama Penyakit</label>
+                            <input type="text" name="nama_penyakit" required value="{{ $disease->nama_penyakit }}"
+                                class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-semibold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Kode ICD (Opsional)</label>
+                            <input type="text" name="kode_icd" value="{{ $disease->kode_icd }}" placeholder="Contoh: J06.9"
+                                class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-mono font-semibold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Kategori</label>
+                            <select name="kategori" class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-semibold text-slate-800">
+                                <option value="Umum" {{ $disease->kategori == 'Umum' ? 'selected' : '' }}>Umum</option>
+                                <option value="Anak" {{ $disease->kategori == 'Anak' ? 'selected' : '' }}>Anak</option>
+                                <option value="Gawat Darurat" {{ $disease->kategori == 'Gawat Darurat' ? 'selected' : '' }}>Gawat Darurat</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Gejala Umum</label>
+                            <textarea name="gejala_umum" rows="2"
+                                class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-medium text-slate-800">{{ $disease->gejala_umum }}</textarea>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-bold text-navy-900 uppercase tracking-wider mb-1.5">Tindakan / Penanganan</label>
+                            <textarea name="tindakan" rows="2"
+                                class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-700 font-medium text-slate-800">{{ $disease->tindakan }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex justify-end space-x-2">
+                        <button type="button" @click="editId = null" class="text-xs font-bold text-slate-700 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-xl transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" class="text-xs font-bold text-white bg-gradient-bhayangkara px-5 py-2.5 rounded-xl hover:shadow-lg transition-all flex items-center space-x-1.5">
+                            <i class="fa-solid fa-floppy-disk text-[10px]"></i>
+                            <span>Simpan Perubahan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirm Modal -->
+        <div x-show="deleteId === {{ $disease->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6">
+            <div class="bg-white border border-slate-100 shadow-2xl rounded-3xl w-full max-w-sm p-8 text-center space-y-4" @click.away="deleteId = null">
+                <div class="h-14 w-14 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto">
+                    <i class="fa-solid fa-trash-can text-xl"></i>
+                </div>
+                <h4 class="font-extrabold text-navy-900 text-base">Hapus Penyakit Ini?</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    <strong>{{ $disease->nama_penyakit }}</strong> akan dihapus dari master data. Riwayat verifikasi yang sudah ada tidak akan terpengaruh.
+                </p>
+                <div class="flex justify-center space-x-2 pt-2">
+                    <button type="button" @click="deleteId = null" class="text-xs font-bold text-slate-700 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <form action="{{ route('dokter.penyakit.delete', $disease->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-xl transition-all flex items-center space-x-1.5">
+                            <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            <span>Ya, Hapus</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
     <!-- Add Modal -->
     <div x-show="showAdd" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6">

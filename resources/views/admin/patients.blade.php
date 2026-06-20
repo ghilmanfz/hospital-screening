@@ -19,7 +19,7 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm" data-mobile-cards="true">
+        <table class="w-full text-left text-sm js-datatable" data-datatable="false">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Nama Pasien</th>
@@ -27,11 +27,11 @@
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Tgl Lahir (Usia)</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Alamat Rumah</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Kunjungan</th>
-                    <th class="py-4 font-bold text-xs uppercase tracking-wider text-right">Aksi</th>
+                    <th class="py-4 font-bold text-xs uppercase tracking-wider text-right nosort">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                @forelse($patients as $p)
+                @foreach($patients as $p)
                 <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="py-4 whitespace-nowrap" data-label="Nama Pasien" data-card-primary="true">
                         <span class="font-bold text-navy-900 block">{{ $p->name }}</span>
@@ -70,7 +70,13 @@
                         </button>
                     </td>
                 </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
+    <!-- Modal detail pasien (dipindah keluar tbody agar tidak dihapus DataTables saat redraw) -->
+    @foreach($patients as $p)
                 <!-- Patient detail modal -->
                 <div x-show="activePatient === {{ $p->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6 transition-all">
                     <div class="bg-white border border-slate-100 shadow-2xl rounded-3xl w-full max-w-md flex flex-col max-h-[85vh]" @click.away="activePatient = null">
@@ -139,17 +145,7 @@
                         </div>
                     </div>
                 </div>
-
-                @empty
-                <tr>
-                    <td colspan="6" class="py-8 text-center text-slate-400">
-                        Tidak ada data pasien yang ditemukan.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @endforeach
 </div>
 
 <!-- Failed Login Monitoring -->
@@ -165,7 +161,7 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm" data-mobile-cards="true">
+        <table class="w-full text-left text-sm js-datatable" data-datatable="false">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Waktu</th>
@@ -176,7 +172,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                @forelse($loginAttempts as $attempt)
+                @foreach($loginAttempts as $attempt)
                 <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="py-4 font-semibold text-slate-500 whitespace-nowrap text-xs" data-label="Waktu">{{ $attempt->created_at->format('d M Y, H:i') }}</td>
                     <td class="py-4 font-bold text-navy-900 text-xs" data-label="Username / Input" data-card-primary="true">{{ $attempt->identifier }}</td>
@@ -194,13 +190,7 @@
                     </td>
                     <td class="py-4 font-mono text-[11px] text-slate-500" data-label="Alamat IP">{{ $attempt->ip_address }}</td>
                 </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="py-8 text-center text-slate-400">
-                        Tidak ada percobaan login gagal. Semua aman!
-                    </td>
-                </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>

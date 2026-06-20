@@ -95,18 +95,18 @@
 
         <!-- Table -->
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm" data-mobile-cards="true">
+            <table class="w-full text-left text-sm js-datatable" data-datatable="false">
                 <thead>
                     <tr class="text-slate-400 border-b border-slate-100">
                         <th class="py-4 font-bold text-xs uppercase tracking-wider">Nama Akun</th>
                         <th class="py-4 font-bold text-xs uppercase tracking-wider">Kontak</th>
                         <th class="py-4 font-bold text-xs uppercase tracking-wider">Role</th>
                         <th class="py-4 font-bold text-xs uppercase tracking-wider">Status</th>
-                        <th class="py-4 font-bold text-xs uppercase tracking-wider text-right">Aksi</th>
+                        <th class="py-4 font-bold text-xs uppercase tracking-wider text-right nosort">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                    @forelse($accounts as $acc)
+                    @foreach($accounts as $acc)
                     @php $isSelf = $acc->id === auth()->id(); @endphp
                     <tr class="hover:bg-slate-50/50 transition-colors">
                         <td class="py-4 whitespace-nowrap" data-label="Nama Akun" data-card-primary="true">
@@ -156,7 +156,14 @@
                             @endunless
                         </td>
                     </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
+        <!-- Modal Ubah / Reset / Hapus (dipindah keluar tbody agar tidak dihapus DataTables saat redraw) -->
+        @foreach($accounts as $acc)
+                    @php $isSelf = $acc->id === auth()->id(); @endphp
                     <!-- Edit Modal -->
                     <div x-show="editId === {{ $acc->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6">
                         <div class="bg-white border border-slate-100 shadow-2xl rounded-3xl w-full max-w-lg flex flex-col max-h-[88vh]" @click.away="editId = null">
@@ -274,15 +281,7 @@
                         </div>
                     </div>
                     @endunless
-
-                    @empty
-                    <tr>
-                        <td colspan="5" class="py-8 text-center text-slate-400">Tidak ada akun yang cocok dengan pencarian.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+        @endforeach
     </div>
 
     <!-- Add Account Modal -->

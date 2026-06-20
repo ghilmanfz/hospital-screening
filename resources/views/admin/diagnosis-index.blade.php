@@ -67,7 +67,7 @@
 
     <!-- Table content -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm" data-mobile-cards="true">
+        <table class="w-full text-left text-sm js-datatable" data-datatable="false">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Tanggal</th>
@@ -76,11 +76,11 @@
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Hasil Screening</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Verifikasi Dokter</th>
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Status Survei</th>
-                    <th class="py-4 font-bold text-xs uppercase tracking-wider text-right">Aksi</th>
+                    <th class="py-4 font-bold text-xs uppercase tracking-wider text-right nosort">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                @forelse($diagnoses as $diag)
+                @foreach($diagnoses as $diag)
                 <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="py-4 font-semibold text-slate-500 whitespace-nowrap" data-label="Tanggal">{{ $diag->created_at->format('d M Y, H:i') }}</td>
                     <td class="py-4 font-bold text-navy-900 whitespace-nowrap" data-label="Nama Pasien" data-card-primary="true">{{ $diag->user->name }}</td>
@@ -121,7 +121,13 @@
                         </button>
                     </td>
                 </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
+    <!-- Modal detail (dipindah keluar tbody agar tidak dihapus DataTables saat redraw) -->
+    @foreach($diagnoses as $diag)
                 <!-- Admin detail modal overlay -->
                 <div x-show="activeModal === {{ $diag->id }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/40 backdrop-blur-sm p-4 sm:p-6 transition-all">
                     
@@ -265,16 +271,6 @@
 
                     </div>
                 </div>
-
-                @empty
-                <tr>
-                    <td colspan="7" class="py-8 text-center text-slate-400">
-                        Tidak ada data diagnosa pasien yang ditemukan.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @endforeach
 </div>
 @endsection
