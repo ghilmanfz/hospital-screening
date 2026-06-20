@@ -17,14 +17,7 @@
 
     <!-- Filter Card -->
     <form action="{{ route('admin.diagnoses.index') }}" method="GET" class="bg-slate-50 border border-slate-100 p-5 rounded-2xl mb-8 space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Search Name -->
-            <div>
-                <label for="search" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Nama Pasien</label>
-                <input type="text" name="search" id="search" placeholder="Cari nama..." value="{{ request('search') }}"
-                    class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700">
-            </div>
-
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Filter Date -->
             <div>
                 <label for="date" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tanggal</label>
@@ -74,7 +67,7 @@
 
     <!-- Table content -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
+        <table class="w-full text-left text-sm" data-mobile-cards="true">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Tanggal</th>
@@ -89,10 +82,10 @@
             <tbody class="divide-y divide-slate-100">
                 @forelse($diagnoses as $diag)
                 <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="py-4 font-semibold text-slate-500 whitespace-nowrap">{{ $diag->created_at->format('d M Y, H:i') }}</td>
-                    <td class="py-4 font-bold text-navy-900 whitespace-nowrap">{{ $diag->user->name }}</td>
-                    <td class="py-4 font-semibold text-slate-750">{{ Str::limit($diag->diagnosa_singkat, 30) }}</td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 font-semibold text-slate-500 whitespace-nowrap" data-label="Tanggal">{{ $diag->created_at->format('d M Y, H:i') }}</td>
+                    <td class="py-4 font-bold text-navy-900 whitespace-nowrap" data-label="Nama Pasien" data-card-primary="true">{{ $diag->user->name }}</td>
+                    <td class="py-4 font-semibold text-slate-750" data-label="Gejala Singkat">{{ Str::limit($diag->diagnosa_singkat, 30) }}</td>
+                    <td class="py-4 whitespace-nowrap" data-label="Hasil Screening">
                         @if(empty($diag->screening_result))
                             <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">Belum Screening</span>
                         @else
@@ -101,7 +94,7 @@
                             </span>
                         @endif
                     </td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 whitespace-nowrap" data-label="Verifikasi Dokter">
                         @if($diag->verification_status == 'Terverifikasi')
                             <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded">
                                 <i class="fa-solid fa-stamp mr-1"></i>Terverifikasi
@@ -114,13 +107,13 @@
                             <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">-</span>
                         @endif
                     </td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 whitespace-nowrap" data-label="Status Survei">
                         <span class="text-[10px] font-bold px-2 py-1 rounded border
                             {{ $diag->status_survei == 'Survei Selesai' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100' }}">
                             {{ $diag->status_survei }}
                         </span>
                     </td>
-                    <td class="py-4 text-right whitespace-nowrap">
+                    <td class="py-4 text-right whitespace-nowrap" data-label="Aksi" data-card-action="true">
                         <button @click="activeModal = {{ $diag->id }}" 
                             class="text-xs font-bold text-white bg-navy-800 hover:bg-navy-900 px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center justify-center space-x-1 ml-auto">
                             <i class="fa-solid fa-eye text-[10px]"></i>

@@ -41,6 +41,22 @@
                         <span>Kelola Landing Page</span>
                     </a>
 
+                    <!-- Kelola Jadwal Dokter -->
+                    <a href="{{ route('admin.schedules.index') }}"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
+                        {{ Route::currentRouteName() == 'admin.schedules.index' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-650 hover:bg-slate-50 hover:text-navy-900' }}">
+                        <i class="fa-solid fa-user-doctor text-sm"></i>
+                        <span>Kelola Jadwal Dokter</span>
+                    </a>
+
+                    <!-- Kelola Acara -->
+                    <a href="{{ route('admin.events.index') }}"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
+                        {{ Route::currentRouteName() == 'admin.events.index' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-650 hover:bg-slate-50 hover:text-navy-900' }}">
+                        <i class="fa-solid fa-calendar-check text-sm"></i>
+                        <span>Kelola Acara</span>
+                    </a>
+
                     <!-- Screening Manager -->
                     <a href="{{ route('admin.screening') }}" 
                         class="flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition-all

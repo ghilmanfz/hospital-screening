@@ -73,15 +73,10 @@
         </div>
         @endif
 
-        <!-- Filter / Search -->
+        <!-- Filter Role (pencarian teks memakai kotak cari bawaan tabel) -->
         <form action="{{ route('admin.accounts') }}" method="GET" class="bg-slate-50 border border-slate-100 p-4 rounded-2xl mb-8 flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
-            <div class="flex-grow">
-                <label for="search" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Cari Akun</label>
-                <input type="text" name="search" id="search" placeholder="Nama / No WhatsApp / Email..." value="{{ request('search') }}"
-                    class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700">
-            </div>
-            <div class="sm:w-44">
-                <label for="role" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Role</label>
+            <div class="sm:w-52">
+                <label for="role" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Filter Role</label>
                 <select name="role" id="role"
                     class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-semibold">
                     <option value="">Semua Role</option>
@@ -100,7 +95,7 @@
 
         <!-- Table -->
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
+            <table class="w-full text-left text-sm" data-mobile-cards="true">
                 <thead>
                     <tr class="text-slate-400 border-b border-slate-100">
                         <th class="py-4 font-bold text-xs uppercase tracking-wider">Nama Akun</th>
@@ -114,7 +109,7 @@
                     @forelse($accounts as $acc)
                     @php $isSelf = $acc->id === auth()->id(); @endphp
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="py-4 whitespace-nowrap">
+                        <td class="py-4 whitespace-nowrap" data-label="Nama Akun" data-card-primary="true">
                             <span class="font-bold text-navy-900 block">
                                 {{ $acc->name }}
                                 @if($isSelf)
@@ -123,16 +118,16 @@
                             </span>
                             <span class="text-[10px] text-slate-400 font-semibold">Terdaftar {{ $acc->created_at->format('d-m-Y') }}</span>
                         </td>
-                        <td class="py-4 text-xs">
+                        <td class="py-4 text-xs" data-label="Kontak">
                             <span class="font-semibold text-slate-700 block">+{{ $acc->phone_number }}</span>
                             <span class="text-[10px] text-slate-400">{{ $acc->email ?? '— tanpa email —' }}</span>
                         </td>
-                        <td class="py-4 whitespace-nowrap">
+                        <td class="py-4 whitespace-nowrap" data-label="Role">
                             <span class="text-[10px] font-bold px-2.5 py-1 rounded border {{ $roleMeta[$acc->role]['class'] ?? 'bg-slate-50 text-slate-600 border-slate-200' }}">
                                 <i class="fa-solid {{ $roleMeta[$acc->role]['icon'] ?? 'fa-user' }} mr-1"></i>{{ $roleMeta[$acc->role]['label'] ?? ucfirst($acc->role) }}
                             </span>
                         </td>
-                        <td class="py-4 whitespace-nowrap">
+                        <td class="py-4 whitespace-nowrap" data-label="Status">
                             @if($acc->status === 'active')
                                 <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded"><i class="fa-solid fa-circle-check mr-1"></i>Aktif</span>
                             @elseif($acc->status === 'blocked')
@@ -141,7 +136,7 @@
                                 <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-1 rounded"><i class="fa-regular fa-clock mr-1"></i>Belum Verifikasi</span>
                             @endif
                         </td>
-                        <td class="py-4 text-right whitespace-nowrap space-x-1.5">
+                        <td class="py-4 text-right whitespace-nowrap space-x-1.5" data-label="Aksi" data-card-action="true">
                             <button @click="editId = {{ $acc->id }}"
                                 class="text-xs font-bold text-white bg-navy-800 hover:bg-navy-900 px-3 py-2 rounded-xl transition-all shadow-sm inline-flex items-center space-x-1">
                                 <i class="fa-solid fa-pen text-[10px]"></i>

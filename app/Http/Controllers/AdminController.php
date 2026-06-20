@@ -498,6 +498,104 @@ class AdminController extends Controller
         return back()->with('success', 'Informasi Layanan berhasil disimpan!');
     }
 
+    // ============================================================
+    // Kelola Acara Rumah Sakit (Hospital Events)
+    // ============================================================
+    public function manageEvents()
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $events = json_decode(SystemConfiguration::getVal('hospital_events', '[]'), true);
+        if (!is_array($events) || empty($events)) {
+            // Tampilkan acara bawaan yang sama dengan yang tampil di dashboard pasien
+            $events = [
+                [
+                    'title' => 'Bakti Sosial & Pemeriksaan Kesehatan',
+                    'date' => 'Setiap Jumat',
+                    'time' => '08.00 - 11.00 WIB',
+                    'location' => 'Lobi Utama Rumah Sakit',
+                    'desc' => 'Pemeriksaan tekanan darah, gula darah sewaktu, dan konsultasi kesehatan singkat.',
+                    'icon' => 'fa-hand-holding-medical',
+                ],
+                [
+                    'title' => 'Edukasi Kesehatan Keluarga',
+                    'date' => 'Minggu ke-2 setiap bulan',
+                    'time' => '09.00 - 10.30 WIB',
+                    'location' => 'Aula Edukasi Pasien',
+                    'desc' => 'Sesi edukasi pencegahan penyakit, pola hidup sehat, dan kesiapsiagaan keluarga.',
+                    'icon' => 'fa-people-group',
+                ],
+                [
+                    'title' => 'Donor Darah Rumah Sakit',
+                    'date' => 'Setiap Rabu',
+                    'time' => '09.00 - 13.00 WIB',
+                    'location' => 'Unit Transfusi Darah',
+                    'desc' => 'Kegiatan donor darah rutin untuk mendukung kebutuhan layanan pasien.',
+                    'icon' => 'fa-droplet',
+                ],
+            ];
+        }
+
+        return view('admin.manage-events', compact('events'));
+    }
+
+    public function updateEvents(Request $request)
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $adminId = Auth::id();
+        $events = [];
+
+        if ($request->has('event')) {
+            foreach ($request->event as $ev) {
+                if (!empty($ev['title'])) {
+                    $events[] = [
+                        'title' => $ev['title'],
+                        'desc' => $ev['desc'] ?? '',
+                        'date' => $ev['date'] ?? '',
+                        'time' => $ev['time'] ?? '',
+                        'location' => $ev['location'] ?? '',
+                        'icon' => $ev['icon'] ?? 'fa-calendar-check',
+                    ];
+                }
+            }
+        }
+
+        SystemConfiguration::setVal('hospital_events', json_encode($events), $adminId);
+
+        AuditLog::create([
+            'admin_id' => $adminId,
+            'activity' => 'Memperbarui Daftar Acara Rumah Sakit',
+            'module' => 'Acara',
+            'old_value' => 'Events update',
+            'new_value' => json_encode($events),
+            'ip_address' => $request->ip()
+        ]);
+
+        return back()->with('success', 'Daftar Acara Rumah Sakit berhasil disimpan!');
+    }
+
+    // ============================================================
+    // Kelola Jadwal Praktik Dokter (halaman tersendiri)
+    // ============================================================
+    public function manageSchedules()
+    {
+        if ($redirect = $this->checkAuth()) {
+            return $redirect;
+        }
+
+        $doctorSchedules = json_decode(SystemConfiguration::getVal('doctor_schedules', '[]'), true);
+        if (!is_array($doctorSchedules)) {
+            $doctorSchedules = [];
+        }
+
+        return view('admin.manage-schedules', compact('doctorSchedules'));
+    }
+
     public function manageScreening()
     {
         if ($redirect = $this->checkAuth()) {

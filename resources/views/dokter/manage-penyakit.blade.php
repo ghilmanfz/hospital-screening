@@ -33,7 +33,7 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
+        <table class="w-full text-left text-sm" data-mobile-cards="true">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Nama Penyakit</th>
@@ -46,22 +46,22 @@
             <tbody class="divide-y divide-slate-100">
                 @forelse($diseases as $disease)
                 <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="py-4 font-bold text-navy-900">{{ $disease->nama_penyakit }}</td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 font-bold text-navy-900" data-label="Nama Penyakit" data-card-primary="true">{{ $disease->nama_penyakit }}</td>
+                    <td class="py-4 whitespace-nowrap" data-label="Kode ICD">
                         @if($disease->kode_icd)
                             <span class="font-mono text-[11px] font-bold text-navy-900 bg-navy-50 border border-navy-100 px-2 py-1 rounded">{{ $disease->kode_icd }}</span>
                         @else
                             <span class="text-slate-400 text-xs">-</span>
                         @endif
                     </td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 whitespace-nowrap" data-label="Kategori">
                         <span class="text-[10px] font-bold px-2 py-1 rounded border
                             {{ $disease->kategori == 'Gawat Darurat' ? 'bg-red-50 text-red-600 border-red-100' : ($disease->kategori == 'Anak' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-50 text-slate-600 border-slate-200') }}">
                             {{ $disease->kategori ?? 'Umum' }}
                         </span>
                     </td>
-                    <td class="py-4 font-medium text-slate-600 text-xs max-w-[260px]">{{ $disease->gejala_umum ? Str::limit($disease->gejala_umum, 55) : '-' }}</td>
-                    <td class="py-4 text-right whitespace-nowrap space-x-1.5">
+                    <td class="py-4 font-medium text-slate-600 text-xs max-w-[260px]" data-label="Gejala Umum">{{ $disease->gejala_umum ? Str::limit($disease->gejala_umum, 55) : '-' }}</td>
+                    <td class="py-4 text-right whitespace-nowrap space-x-1.5" data-label="Aksi" data-card-action="true">
                         <button @click="editId = {{ $disease->id }}"
                             class="text-xs font-bold text-white bg-navy-800 hover:bg-navy-900 px-3 py-2 rounded-xl transition-all shadow-sm inline-flex items-center space-x-1">
                             <i class="fa-solid fa-pen text-[10px]"></i>

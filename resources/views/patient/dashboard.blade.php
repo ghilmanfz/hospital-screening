@@ -127,12 +127,12 @@
 
     </div>
 
-    <!-- Event Rumah Sakit -->
+    <!-- Acara Rumah Sakit -->
     @if(!empty($hospitalEvents))
     <div class="bg-white border border-slate-200/60 rounded-3xl shadow-xl p-6 sm:p-8 mb-10">
         <div class="flex items-center justify-between mb-5">
             <div>
-                <h3 class="font-extrabold text-navy-900 text-base">Event Rumah Sakit</h3>
+                <h3 class="font-extrabold text-navy-900 text-base">Acara Rumah Sakit</h3>
                 <p class="text-xs text-slate-400">Informasi kegiatan dan program kesehatan yang dapat diikuti pasien</p>
             </div>
             <div class="h-10 w-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-700">
@@ -146,7 +146,7 @@
                     <i class="fa-solid {{ $event['icon'] ?? 'fa-calendar-check' }}"></i>
                 </div>
                 <div class="min-w-0">
-                    <h5 class="font-bold text-slate-900 text-sm leading-snug">{{ $event['title'] ?? 'Event Rumah Sakit' }}</h5>
+                    <h5 class="font-bold text-slate-900 text-sm leading-snug">{{ $event['title'] ?? 'Acara Rumah Sakit' }}</h5>
                     <p class="text-[11px] text-slate-500 font-medium leading-relaxed mt-1">{{ $event['desc'] ?? '' }}</p>
                     <div class="flex flex-wrap gap-1.5 mt-3">
                         <span class="text-[10px] font-bold text-navy-900 bg-navy-100/70 px-2 py-0.5 rounded inline-flex items-center">

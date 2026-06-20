@@ -82,79 +82,22 @@
     </form>
 </div>
 
-<!-- Doctor Schedules Editor -->
-<div class="bg-white border border-slate-200/60 rounded-3xl p-8 sm:p-10 shadow-xl space-y-6" x-data="{ schedules: {{ json_encode($doctorSchedules) }} }">
-    <div class="flex items-center justify-between border-b border-slate-100 pb-5">
-        <div>
-            <h3 class="font-extrabold text-navy-900 text-lg">Kelola Jadwal Praktik Dokter</h3>
-            <p class="text-xs text-slate-400">Atur dokter spesialis, jadwal konsultasi musiman, dan ruang lokasi praktik</p>
+<!-- Pointer: Jadwal Dokter dipindah ke menu tersendiri -->
+<a href="{{ route('admin.schedules.index') }}"
+    class="block bg-white border border-slate-200/60 rounded-3xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all group">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <div class="h-12 w-12 bg-navy-50 text-navy-900 rounded-2xl flex items-center justify-center text-lg flex-shrink-0">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div>
+                <h3 class="font-extrabold text-navy-900 text-base">Kelola Jadwal Praktik Dokter</h3>
+                <p class="text-xs text-slate-400">Pengaturan dokter spesialis (foto, jabatan, jadwal) kini ada di menu tersendiri. Klik untuk membuka.</p>
+            </div>
         </div>
-        <div class="h-10 w-10 bg-navy-50 text-navy-900 rounded-xl flex items-center justify-center">
-            <i class="fa-solid fa-user-doctor"></i>
-        </div>
+        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-navy-900 transition-colors"></i>
     </div>
-
-    <form action="{{ route('admin.schedules') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-        @csrf
-        
-        <div class="space-y-4">
-            <template x-for="(sched, index) in schedules" :key="index">
-                <div class="bg-slate-50 border border-slate-100 p-5 rounded-2xl relative space-y-4">
-                    <button type="button" @click="schedules.splice(index, 1)" 
-                        class="absolute top-4 right-4 h-7 w-7 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors flex items-center justify-center">
-                        <i class="fa-solid fa-trash-can text-sm"></i>
-                    </button>
- 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pr-8">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Dokter</label>
-                            <input type="text" :name="'doctor['+index+'][nama]'" x-model="sched.nama" required
-                                class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Spesialis</label>
-                            <input type="text" :name="'doctor['+index+'][spesialis]'" x-model="sched.spesialis" required
-                                class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Waktu / Jadwal</label>
-                            <input type="text" :name="'doctor['+index+'][jadwal]'" x-model="sched.jadwal" required
-                                class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Lokasi</label>
-                            <input type="text" :name="'doctor['+index+'][lokasi]'" x-model="sched.lokasi" required
-                                class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-medium">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Foto Dokter</label>
-                            <input type="text" :name="'doctor['+index+'][foto]'" x-model="sched.foto" placeholder="Masukkan URL Foto..."
-                                class="block w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-medium">
-                            <div class="flex items-center space-x-1">
-                                <span class="text-[9px] text-slate-400 font-bold uppercase whitespace-nowrap">Upload:</span>
-                                <input type="file" :name="'doctor['+index+'][foto_file]'" accept="image/*"
-                                    class="block w-full text-[10px] text-slate-500 file:mr-1 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:font-bold file:bg-navy-50 file:text-navy-900 hover:file:bg-navy-100 cursor-pointer">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-
-            <button type="button" @click="schedules.push({nama: '', spesialis: '', jadwal: '', lokasi: '', foto: ''})" 
-                class="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center justify-center space-x-1 py-2">
-                <i class="fa-solid fa-plus-circle"></i>
-                <span>Tambah Jadwal Dokter Baru</span>
-            </button>
-        </div>
-
-        <div class="text-right">
-            <button type="submit" class="text-sm font-bold text-white bg-gradient-bhayangkara px-6 py-3 rounded-xl hover:shadow-lg hover:scale-[1.01] transition-all inline-flex items-center space-x-2">
-                <i class="fa-solid fa-floppy-disk text-xs"></i>
-                <span>Simpan Jadwal Dokter</span>
-            </button>
-        </div>
-    </form>
-</div>
+</a>
 
 <!-- Hospital Services Editor -->
 <div class="bg-white border border-slate-200/60 rounded-3xl p-8 sm:p-10 shadow-xl space-y-6" x-data="{ services: {{ json_encode($hospitalServices) }} }">

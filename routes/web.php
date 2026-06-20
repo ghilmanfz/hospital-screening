@@ -55,8 +55,15 @@ Route::prefix('admin')->group(function () {
     // Landing Manager
     Route::get('/landing', [AdminController::class, 'manageLanding'])->name('admin.landing');
     Route::post('/landing', [AdminController::class, 'updateLanding']);
-    Route::post('/schedules', [AdminController::class, 'updateSchedules'])->name('admin.schedules');
     Route::post('/services', [AdminController::class, 'updateServices'])->name('admin.services');
+
+    // Kelola Jadwal Praktik Dokter (halaman & menu tersendiri)
+    Route::get('/schedules', [AdminController::class, 'manageSchedules'])->name('admin.schedules.index');
+    Route::post('/schedules', [AdminController::class, 'updateSchedules'])->name('admin.schedules');
+
+    // Kelola Acara Rumah Sakit
+    Route::get('/events', [AdminController::class, 'manageEvents'])->name('admin.events.index');
+    Route::post('/events', [AdminController::class, 'updateEvents'])->name('admin.events');
 
     // Screening Manager
     Route::get('/screening', [AdminController::class, 'manageScreening'])->name('admin.screening');

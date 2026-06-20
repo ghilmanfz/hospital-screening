@@ -66,14 +66,9 @@
     </div>
     @endif
 
-    <!-- Search & Filter -->
+    <!-- Filter Status (pencarian teks memakai kotak cari bawaan tabel) -->
     <form action="{{ route('dokter.dashboard') }}" method="GET" class="bg-slate-50 border border-slate-100 p-4 rounded-2xl mb-8 flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
-        <div class="flex-grow">
-            <label for="search" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Cari Pasien</label>
-            <input type="text" name="search" id="search" placeholder="Nama pasien atau No WhatsApp..." value="{{ request('search') }}"
-                class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700">
-        </div>
-        <div class="sm:w-52">
+        <div class="sm:w-60">
             <label for="verifikasi" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Status Verifikasi</label>
             <select name="verifikasi" id="verifikasi"
                 class="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs outline-none focus:border-emerald-700 font-semibold">
@@ -85,14 +80,14 @@
         <div class="flex space-x-2">
             <a href="{{ route('dokter.dashboard') }}" class="text-[11px] font-bold text-slate-500 hover:text-slate-700 px-3 py-2">Reset</a>
             <button type="submit" class="text-[11px] font-bold text-white bg-navy-900 hover:bg-navy-950 px-5 py-2 rounded-lg shadow transition-all">
-                Cari Data
+                Terapkan
             </button>
         </div>
     </form>
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
+        <table class="w-full text-left text-sm" data-mobile-cards="true">
             <thead>
                 <tr class="text-slate-400 border-b border-slate-100">
                     <th class="py-4 font-bold text-xs uppercase tracking-wider">Tanggal</th>
@@ -106,18 +101,18 @@
             <tbody class="divide-y divide-slate-100">
                 @forelse($diagnoses as $diag)
                 <tr class="hover:bg-slate-50/50 transition-colors {{ $diag->verification_status == 'Menunggu Verifikasi' ? 'bg-amber-50/30' : '' }}">
-                    <td class="py-4 font-semibold text-slate-500 whitespace-nowrap text-xs">{{ $diag->created_at->format('d M Y, H:i') }}</td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 font-semibold text-slate-500 whitespace-nowrap text-xs" data-label="Tanggal">{{ $diag->created_at->format('d M Y, H:i') }}</td>
+                    <td class="py-4 whitespace-nowrap" data-label="Pasien" data-card-primary="true">
                         <span class="font-bold text-navy-900 block">{{ $diag->user->name }}</span>
                         <span class="text-[10px] text-slate-400 font-semibold">{{ $diag->user->gender ?? '-' }}{{ $diag->user->age() !== null ? ', ' . $diag->user->age() . ' th' : '' }} &middot; +{{ $diag->user->phone_number }}</span>
                     </td>
-                    <td class="py-4 font-semibold text-slate-700 text-xs">{{ Str::limit($diag->diagnosa_singkat, 28) }}</td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 font-semibold text-slate-700 text-xs" data-label="Keluhan">{{ Str::limit($diag->diagnosa_singkat, 28) }}</td>
+                    <td class="py-4 whitespace-nowrap" data-label="Hasil Screening">
                         <span class="inline-flex items-center {{ $diag->screening_result == 'Disarankan ke IGD' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-emerald-50 text-emerald-800 border-emerald-100/50' }} text-[10px] font-bold px-2.5 py-1 rounded border">
                             {{ $diag->screening_result }}
                         </span>
                     </td>
-                    <td class="py-4 whitespace-nowrap">
+                    <td class="py-4 whitespace-nowrap" data-label="Status">
                         @if($diag->verification_status == 'Terverifikasi')
                             <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded">
                                 <i class="fa-solid fa-stamp mr-1"></i>Terverifikasi
@@ -128,7 +123,7 @@
                             </span>
                         @endif
                     </td>
-                    <td class="py-4 text-right whitespace-nowrap">
+                    <td class="py-4 text-right whitespace-nowrap" data-label="Aksi" data-card-action="true">
                         <button @click="activeModal = {{ $diag->id }}"
                             class="text-xs font-bold text-white {{ $diag->verification_status == 'Menunggu Verifikasi' ? 'bg-emerald-700 hover:bg-emerald-800' : 'bg-navy-800 hover:bg-navy-900' }} px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center justify-center space-x-1 ml-auto">
                             <i class="fa-solid {{ $diag->verification_status == 'Menunggu Verifikasi' ? 'fa-stamp' : 'fa-eye' }} text-[10px]"></i>
