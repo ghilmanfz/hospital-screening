@@ -611,7 +611,7 @@
     </div>
 
     <!-- Riwayat Diagnosa Table -->
-    <div class="bg-white border border-slate-200/60 rounded-3xl shadow-xl p-8 sm:p-10">
+    <div class="bg-white border border-slate-200/60 rounded-3xl shadow-xl p-6 sm:p-10">
         <div class="flex items-center justify-between border-b border-slate-100 pb-5 mb-6">
             <div>
                 <h3 class="font-extrabold text-navy-900 text-lg">Riwayat Layanan & Kunjungan Anda</h3>
@@ -623,7 +623,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
+            <table class="w-full text-left text-sm" data-mobile-cards="true">
                 <thead>
                     <tr class="text-slate-400 border-b border-slate-100">
                         <th class="py-4 font-bold text-xs uppercase tracking-wider">Tanggal</th>
@@ -637,8 +637,8 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($diagnoses as $diag)
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="py-4 font-semibold text-slate-500 whitespace-nowrap">{{ $diag->created_at->format('d M Y, H:i') }}</td>
-                        <td class="py-4 whitespace-nowrap">
+                        <td class="py-4 font-semibold text-slate-500 whitespace-nowrap" data-label="Tanggal">{{ $diag->created_at->format('d M Y, H:i') }}</td>
+                        <td class="py-4 whitespace-nowrap" data-label="Layanan">
                             @if($diag->jenis_layanan == 'kontrol')
                                 <span class="text-[10px] font-bold text-navy-900 bg-navy-50 border border-navy-100 px-2 py-1 rounded">
                                     <i class="fa-solid fa-calendar-check mr-1"></i>Kontrol
@@ -649,8 +649,8 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="py-4 font-bold text-slate-900">{{ Str::limit($diag->diagnosa_singkat, 30) }}</td>
-                        <td class="py-4 whitespace-nowrap">
+                        <td class="py-4 font-bold text-slate-900" data-label="Gejala / Keperluan" data-card-primary="true">{{ Str::limit($diag->diagnosa_singkat, 30) }}</td>
+                        <td class="py-4 whitespace-nowrap" data-label="Hasil Screening">
                             @if(empty($diag->screening_result))
                                 <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">{{ $diag->jenis_layanan == 'kontrol' ? 'Tidak Perlu' : 'Belum Screening' }}</span>
                             @else
@@ -659,7 +659,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="py-4 whitespace-nowrap">
+                        <td class="py-4 whitespace-nowrap" data-label="Verifikasi Dokter">
                             @if($diag->verification_status == 'Terverifikasi')
                                 <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded">
                                     <i class="fa-solid fa-stamp mr-1"></i>Terverifikasi
@@ -672,7 +672,7 @@
                                 <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">-</span>
                             @endif
                         </td>
-                        <td class="py-4 text-right whitespace-nowrap">
+                        <td class="py-4 text-right whitespace-nowrap" data-label="Aksi" data-card-action="true">
                             <button @click="activeModal = {{ $diag->id }}"
                                 class="text-xs font-bold text-white bg-navy-800 hover:bg-navy-900 px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center justify-center space-x-1 ml-auto">
                                 <i class="fa-solid fa-eye text-[10px]"></i>
