@@ -189,7 +189,7 @@
         <!-- Custom Card styled like the Employee Healthy Week flyer -->
         <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200/60 shadow-2xl shadow-navy-900/10 p-8 sm:p-12">
             <!-- Header Logos -->
-            <div class="flex items-center justify-between border-b border-slate-100 pb-8 mb-8">
+            <div class="flex items-center border-b border-slate-100 pb-8 mb-8">
                 <!-- Hospital Logo -->
                 <div class="flex items-center space-x-2">
                     @php
@@ -207,10 +207,6 @@
                         <span class="font-bold text-lg text-navy-900 tracking-tight block leading-tight">{{ $hospitalName }}</span>
                         <span class="font-medium text-xs text-emerald-700 tracking-wider block uppercase">Portal Digital</span>
                     </div>
-                </div>
-                <!-- Partner / Deloitte text mockup -->
-                <div class="text-right">
-                    <span class="font-black text-xl text-slate-800 tracking-tight">Deloitte<span class="text-emerald-500">.</span></span>
                 </div>
             </div>
 

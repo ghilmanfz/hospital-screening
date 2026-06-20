@@ -39,9 +39,9 @@
                             500: '#627d98',
                             600: '#486581',
                             700: '#334e68',
-                            800: '#102a43', // Deloitte Deep Navy
+                            800: '#102a43',
                             900: '#0b2545', // Bhayangkara deep navy
-                            950: '#00205b', // Deloitte Brand Navy
+                            950: '#00205b',
                         },
                         emerald: {
                             500: '#10b981',
